@@ -8,11 +8,11 @@ const NoteForm = ({ onAddNote }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim()) {
-      setError('Title cannot be empty.'); 
+      setError('Error: Title cannot be empty.'); 
       return;
     }
     onAddNote(title, description);
-    setTitle('');
+    setTitle(''); 
     setDescription('');
     setError('');
   };
@@ -22,21 +22,29 @@ const NoteForm = ({ onAddNote }) => {
       <div className="input-group">
         <input
           type="text"
-          placeholder="Title (Required)"
+          placeholder="Title (required)"
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
-            if (e.target.value) setError(''); 
+            if (e.target.value.trim()) setError(''); 
           }}
         />
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-text">{error}</p>}
       </div>
+      
       <textarea
-        placeholder="Description (Optional)"
+        placeholder="Description (optional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <button type="submit" disabled={!title.trim()}>Add Note</button>
+      
+      <button 
+        type="submit" 
+        className="submit-btn" 
+        disabled={!title.trim()} 
+      >
+        Submit
+      </button>
     </form>
   );
 };
