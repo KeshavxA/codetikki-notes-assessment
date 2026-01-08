@@ -1,3 +1,7 @@
+Google Drive Video link
+https://drive.google.com/file/d/1rAO9UoRJ1rWLHD86QD3JOVRVi39Sogrz/view?usp=sharing
+
+
 Project Overview
 This application was built for the React JS Notes Management Assessment  to demonstrate my ability to build clean, state-driven user interfaces. It follows the Three Pillars of development: Solid Architecture, Flawless State, and Thoughtful UX.
 
