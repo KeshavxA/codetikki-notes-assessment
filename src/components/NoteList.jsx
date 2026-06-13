@@ -1,6 +1,6 @@
 import NoteItem from './NoteItem';
 
-const NoteList = ({ notes, onDeleteNote }) => {
+const NoteList = ({ notes, onDeleteNote, onUpdateNote }) => {
   return (
     <div className="note-list">
       {notes.map((note) => (
@@ -8,6 +8,7 @@ const NoteList = ({ notes, onDeleteNote }) => {
           key={note.id} 
           note={note} 
           onDelete={() => onDeleteNote(note.id)} 
+          onUpdate={onUpdateNote}
         />
       ))}
     </div>

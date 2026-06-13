@@ -30,6 +30,12 @@ function App() {
     setNotes(notes.filter(note => note.id !== id));
   };
 
+  const updateNote = (id, newTitle, newDescription) => {
+    setNotes(notes.map(note => 
+      note.id === id ? { ...note, title: newTitle, description: newDescription } : note
+    ));
+  };
+
   if (isLoading) return <Loader />; 
 
   return (
@@ -39,7 +45,7 @@ function App() {
       {notes.length === 0 ? (
         <EmptyState /> 
       ) : (
-        <NoteList notes={notes} onDeleteNote={deleteNote} />
+        <NoteList notes={notes} onDeleteNote={deleteNote} onUpdateNote={updateNote} />
       )}
     </div>
   );
