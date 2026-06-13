@@ -44,7 +44,7 @@ function App() {
   }, []);
 
   const addNote = (title, description, category) => {
-    const newNote = { id: Date.now(), title, description, category: category || 'Personal' };
+    const newNote = { id: Date.now(), title, description, category: category || 'Personal', isPinned: false };
     setNotes((prevNotes) => [newNote, ...prevNotes]); 
     showToast('Note added successfully!');
   };
@@ -61,6 +61,12 @@ function App() {
     showToast('Note updated successfully!');
   };
 
+  const togglePin = (id) => {
+    setNotes(notes.map(note => 
+      note.id === id ? { ...note, isPinned: !note.isPinned } : note
+    ));
+  };
+
   if (isLoading) return <Loader />; 
 
   const filteredNotes = notes.filter(note => {
@@ -68,7 +74,7 @@ function App() {
       (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = filterCategory === 'All' || note.category === filterCategory || (!note.category && filterCategory === 'Personal');
     return matchesSearch && matchesCategory;
-  });
+  }).sort((a, b) => Number(b.isPinned || false) - Number(a.isPinned || false));
 
   return (
     <div className="app-container">
@@ -111,7 +117,7 @@ function App() {
       ) : filteredNotes.length === 0 ? (
         <p className="no-results">No notes found matching your filters</p>
       ) : (
-        <NoteList notes={filteredNotes} onDeleteNote={deleteNote} onUpdateNote={updateNote} />
+        <NoteList notes={filteredNotes} onDeleteNote={deleteNote} onUpdateNote={updateNote} onTogglePin={togglePin} />
       )}
       <Toast message={toastMessage} />
     </div>

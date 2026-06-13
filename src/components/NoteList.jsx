@@ -1,6 +1,6 @@
 import NoteItem from './NoteItem';
 
-const NoteList = ({ notes, onDeleteNote, onUpdateNote }) => {
+const NoteList = ({ notes, onDeleteNote, onUpdateNote, onTogglePin }) => {
   return (
     <div className="note-list">
       {notes.map((note) => (
@@ -9,6 +9,7 @@ const NoteList = ({ notes, onDeleteNote, onUpdateNote }) => {
           note={note} 
           onDelete={() => onDeleteNote(note.id)} 
           onUpdate={onUpdateNote}
+          onTogglePin={onTogglePin}
         />
       ))}
     </div>

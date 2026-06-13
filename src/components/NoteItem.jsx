@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const NoteItem = ({ note, onDelete, onUpdate }) => {
+const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(note.title);
   const [editDescription, setEditDescription] = useState(note.description);
@@ -48,10 +48,13 @@ const NoteItem = ({ note, onDelete, onUpdate }) => {
   }
 
   return (
-    <div className="note-card">
+    <div className={`note-card ${note.isPinned ? 'pinned-card' : ''}`}>
       <div className="note-content">
         <div className="note-header">
-          <h3>Title: {note.title}</h3>
+          <h3>
+            {note.isPinned && <span className="pin-icon">📌</span>}
+            Title: {note.title}
+          </h3>
           <span className={`category-badge cat-${(note.category || 'Personal').toLowerCase()}`}>
             {note.category || 'Personal'}
           </span>
@@ -59,6 +62,9 @@ const NoteItem = ({ note, onDelete, onUpdate }) => {
         <p>Description: {note.description || 'No description provided'}</p>
       </div>
       <div className="note-actions">
+        <button className="pin-btn" onClick={() => onTogglePin(note.id)}>
+          {note.isPinned ? 'Unpin' : 'Pin'}
+        </button>
         <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
         <button className="delete-btn" onClick={onDelete}>Delete</button>
       </div>
