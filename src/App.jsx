@@ -3,6 +3,7 @@ import NoteForm from './components/NoteForm';
 import NoteList from './components/NoteList';
 import Loader from './components/Loader';
 import EmptyState from './components/EmptyState';
+import Toast from './components/Toast';
 import './App.css';
 
 function App() {
@@ -17,6 +18,12 @@ function App() {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true';
   });
+  const [toastMessage, setToastMessage] = useState('');
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
 
   useEffect(() => {
     localStorage.setItem('darkMode', isDarkMode);
@@ -39,16 +46,19 @@ function App() {
   const addNote = (title, description, category) => {
     const newNote = { id: Date.now(), title, description, category: category || 'Personal' };
     setNotes((prevNotes) => [newNote, ...prevNotes]); 
+    showToast('Note added successfully!');
   };
 
   const deleteNote = (id) => {
     setNotes(notes.filter(note => note.id !== id));
+    showToast('Note deleted!');
   };
 
   const updateNote = (id, newTitle, newDescription, newCategory) => {
     setNotes(notes.map(note => 
       note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory } : note
     ));
+    showToast('Note updated successfully!');
   };
 
   if (isLoading) return <Loader />; 
@@ -103,6 +113,7 @@ function App() {
       ) : (
         <NoteList notes={filteredNotes} onDeleteNote={deleteNote} onUpdateNote={updateNote} />
       )}
+      <Toast message={toastMessage} />
     </div>
   );
 }
