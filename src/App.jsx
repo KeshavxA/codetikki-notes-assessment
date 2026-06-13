@@ -13,6 +13,19 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    return savedMode === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', isDarkMode);
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
@@ -49,7 +62,15 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>My Notes</h1>
+      <div className="header-row">
+        <h1>My Notes</h1>
+        <button 
+          className="theme-toggle-btn" 
+          onClick={() => setIsDarkMode(!isDarkMode)}
+        >
+          {isDarkMode ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      </div>
       <NoteForm onAddNote={addNote} />
       
       {notes.length > 0 && (
