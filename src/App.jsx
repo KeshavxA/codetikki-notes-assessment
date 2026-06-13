@@ -11,6 +11,7 @@ function App() {
     return savedNotes ? JSON.parse(savedNotes) : [];
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
@@ -38,14 +39,34 @@ function App() {
 
   if (isLoading) return <Loader />; 
 
+  const filteredNotes = notes.filter(note => 
+    note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   return (
     <div className="app-container">
       <h1>My Notes</h1>
       <NoteForm onAddNote={addNote} />
+      
+      {notes.length > 0 && (
+        <div className="search-container">
+          <input 
+            type="text" 
+            placeholder="Search notes..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+      )}
+
       {notes.length === 0 ? (
         <EmptyState /> 
+      ) : filteredNotes.length === 0 ? (
+        <p className="no-results">No notes found matching "{searchTerm}"</p>
       ) : (
-        <NoteList notes={notes} onDeleteNote={deleteNote} onUpdateNote={updateNote} />
+        <NoteList notes={filteredNotes} onDeleteNote={deleteNote} onUpdateNote={updateNote} />
       )}
     </div>
   );

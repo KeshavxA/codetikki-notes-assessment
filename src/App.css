@@ -100,3 +100,28 @@ input, textarea {
   resize: vertical;
   min-height: 60px;
 }
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0077b6;
+}
+
+.no-results {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin-top: 20px;
+}
