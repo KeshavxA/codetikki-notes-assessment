@@ -12,6 +12,7 @@ function App() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('All');
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
@@ -22,8 +23,8 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const addNote = (title, description) => {
-    const newNote = { id: Date.now(), title, description };
+  const addNote = (title, description, category) => {
+    const newNote = { id: Date.now(), title, description, category: category || 'Personal' };
     setNotes((prevNotes) => [newNote, ...prevNotes]); 
   };
 
@@ -31,18 +32,20 @@ function App() {
     setNotes(notes.filter(note => note.id !== id));
   };
 
-  const updateNote = (id, newTitle, newDescription) => {
+  const updateNote = (id, newTitle, newDescription, newCategory) => {
     setNotes(notes.map(note => 
-      note.id === id ? { ...note, title: newTitle, description: newDescription } : note
+      note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory } : note
     ));
   };
 
   if (isLoading) return <Loader />; 
 
-  const filteredNotes = notes.filter(note => 
-    note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredNotes = notes.filter(note => {
+    const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = filterCategory === 'All' || note.category === filterCategory || (!note.category && filterCategory === 'Personal');
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="app-container">
@@ -58,13 +61,24 @@ function App() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
+          <select 
+            value={filterCategory} 
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="filter-select"
+          >
+            <option value="All">All Categories</option>
+            <option value="Personal">Personal</option>
+            <option value="Work">Work</option>
+            <option value="Ideas">Ideas</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
       )}
 
       {notes.length === 0 ? (
         <EmptyState /> 
       ) : filteredNotes.length === 0 ? (
-        <p className="no-results">No notes found matching "{searchTerm}"</p>
+        <p className="no-results">No notes found matching your filters</p>
       ) : (
         <NoteList notes={filteredNotes} onDeleteNote={deleteNote} onUpdateNote={updateNote} />
       )}
