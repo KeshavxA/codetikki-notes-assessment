@@ -11,6 +11,7 @@ const NoteForm = ({ onAddNote }) => {
   const [category, setCategory] = useState('Personal');
   const [color, setColor] = useState('default');
   const [tags, setTags] = useState([]);
+  const [dueDate, setDueDate] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
@@ -19,12 +20,13 @@ const NoteForm = ({ onAddNote }) => {
       setError('Error: Title cannot be empty.'); 
       return;
     }
-    onAddNote(title, description, category, color, tags);
+    onAddNote(title, description, category, color, tags, dueDate);
     setTitle(''); 
     setDescription('');
     setCategory('Personal');
     setColor('default');
     setTags([]);
+    setDueDate('');
     setError('');
   };
 
@@ -52,16 +54,25 @@ const NoteForm = ({ onAddNote }) => {
       />
 
       <div className="form-row">
-        <select 
-          value={category} 
-          onChange={(e) => setCategory(e.target.value)}
-          className="category-select"
-        >
-          <option value="Personal">Personal</option>
-          <option value="Work">Work</option>
-          <option value="Ideas">Ideas</option>
-          <option value="Other">Other</option>
-        </select>
+        <div className="form-row-group">
+          <input 
+            type="date" 
+            value={dueDate} 
+            onChange={(e) => setDueDate(e.target.value)}
+            className="due-date-input"
+            title="Due Date"
+          />
+          <select 
+            value={category} 
+            onChange={(e) => setCategory(e.target.value)}
+            className="category-select"
+          >
+            <option value="Personal">Personal</option>
+            <option value="Work">Work</option>
+            <option value="Ideas">Ideas</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
         <div className="color-picker">
           {NOTE_COLORS.map(c => (

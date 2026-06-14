@@ -592,3 +592,56 @@ body.dark-mode .view-tabs button.active-tab {
 .archive-btn:hover {
   background: #5a6268;
 }
+
+/* Due Date Styles */
+.form-row-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.due-date-input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+body.dark-mode .due-date-input {
+  background: #333;
+  color: #fff;
+  border-color: #555;
+}
+
+.due-date-display {
+  font-size: 13px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #666;
+}
+
+body.dark-mode .due-date-display {
+  color: #ccc;
+}
+
+.due-date-display.overdue {
+  color: #d93025;
+  font-weight: bold;
+}
+
+.due-date-display.due-soon {
+  color: #e65100;
+  font-weight: bold;
+}
+
+body.dark-mode .due-date-display.overdue {
+  color: #f28b82;
+}
+
+body.dark-mode .due-date-display.due-soon {
+  color: #fbbc04;
+}

@@ -13,10 +13,11 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
   const [editCategory, setEditCategory] = useState(note.category || 'Personal');
   const [editColor, setEditColor] = useState(note.color || 'default');
   const [editTags, setEditTags] = useState(note.tags || []);
+  const [editDueDate, setEditDueDate] = useState(note.dueDate || '');
 
   const handleSave = () => {
     if (editTitle.trim()) {
-      onUpdate(note.id, editTitle, editDescription, editCategory, editColor, editTags);
+      onUpdate(note.id, editTitle, editDescription, editCategory, editColor, editTags, editDueDate);
       setIsEditing(false);
     }
   };
@@ -39,16 +40,25 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           placeholder="Note Description"
         />
         <div className="form-row">
-          <select 
-            value={editCategory} 
-            onChange={(e) => setEditCategory(e.target.value)}
-            className="category-select"
-          >
-            <option value="Personal">Personal</option>
-            <option value="Work">Work</option>
-            <option value="Ideas">Ideas</option>
-            <option value="Other">Other</option>
-          </select>
+          <div className="form-row-group">
+            <input 
+              type="date" 
+              value={editDueDate} 
+              onChange={(e) => setEditDueDate(e.target.value)}
+              className="due-date-input"
+              title="Due Date"
+            />
+            <select 
+              value={editCategory} 
+              onChange={(e) => setEditCategory(e.target.value)}
+              className="category-select"
+            >
+              <option value="Personal">Personal</option>
+              <option value="Work">Work</option>
+              <option value="Ideas">Ideas</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
           <div className="color-picker">
             {NOTE_COLORS.map(c => (
@@ -73,6 +83,23 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     );
   }
 
+  const getDueDateStatus = (dateString) => {
+    if (!dateString) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dateString);
+    due.setHours(0, 0, 0, 0);
+    
+    const diffTime = due - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return 'overdue';
+    if (diffDays <= 2) return 'due-soon';
+    return 'upcoming';
+  };
+
+  const dueStatus = getDueDateStatus(note.dueDate);
+
   return (
     <div className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}>
       <div className="note-content">
@@ -85,6 +112,15 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
             {note.category || 'Personal'}
           </span>
         </div>
+        
+        {note.dueDate && (
+          <div className={`due-date-display ${dueStatus}`}>
+            📅 {new Date(note.dueDate).toLocaleDateString()} 
+            {dueStatus === 'overdue' && ' (Overdue!)'}
+            {dueStatus === 'due-soon' && ' (Due soon)'}
+          </div>
+        )}
+
         <div className="note-description-container">
           <strong>Description: </strong>
           {note.description ? (
