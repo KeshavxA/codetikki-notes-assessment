@@ -338,3 +338,79 @@ body.dark-mode .ql-picker-options {
   background-color: #333;
   border-color: #555;
 }
+
+/* Color Picker & Form Layout */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.color-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.color-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s;
+  padding: 0;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn.selected {
+  border-color: #333;
+  box-shadow: 0 0 0 2px #fff inset;
+}
+
+body.dark-mode .color-btn.selected {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px #333 inset;
+}
+
+/* Note Background Colors */
+.note-card.bg-default { background-color: #ffffff; }
+.note-card.bg-red { background-color: #f28b82; border-color: transparent; }
+.note-card.bg-orange { background-color: #fbbc04; border-color: transparent; }
+.note-card.bg-yellow { background-color: #fff475; border-color: transparent; }
+.note-card.bg-green { background-color: #ccff90; border-color: transparent; }
+.note-card.bg-blue { background-color: #aecbfa; border-color: transparent; }
+.note-card.bg-purple { background-color: #d7aefb; border-color: transparent; }
+
+.color-default { background-color: #ffffff; border: 1px solid #ccc; }
+.color-red { background-color: #f28b82; }
+.color-orange { background-color: #fbbc04; }
+.color-yellow { background-color: #fff475; }
+.color-green { background-color: #ccff90; }
+.color-blue { background-color: #aecbfa; }
+.color-purple { background-color: #d7aefb; }
+
+/* Dark Mode Note Background Colors */
+body.dark-mode .note-card.bg-default { background-color: #252525; }
+body.dark-mode .note-card.bg-red { background-color: #5c2b29; border-color: transparent; }
+body.dark-mode .note-card.bg-orange { background-color: #614a19; border-color: transparent; }
+body.dark-mode .note-card.bg-yellow { background-color: #635d19; border-color: transparent; }
+body.dark-mode .note-card.bg-green { background-color: #345920; border-color: transparent; }
+body.dark-mode .note-card.bg-blue { background-color: #2d555e; border-color: transparent; }
+body.dark-mode .note-card.bg-purple { background-color: #42275e; border-color: transparent; }
+
+body.dark-mode .color-default { background-color: #252525; border-color: #555; }
+body.dark-mode .color-red { background-color: #5c2b29; }
+body.dark-mode .color-orange { background-color: #614a19; }
+body.dark-mode .color-yellow { background-color: #635d19; }
+body.dark-mode .color-green { background-color: #345920; }
+body.dark-mode .color-blue { background-color: #2d555e; }
+body.dark-mode .color-purple { background-color: #42275e; }
+
+/* Adjust Pinned styling for dark mode + colors */
+body.dark-mode .pinned-card.bg-default { background-color: #2a353a; }
+.pinned-card.bg-default { background-color: #f4fcff; }

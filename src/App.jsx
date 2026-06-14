@@ -43,8 +43,8 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const addNote = (title, description, category) => {
-    const newNote = { id: Date.now(), title, description, category: category || 'Personal', isPinned: false };
+  const addNote = (title, description, category, color) => {
+    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', isPinned: false };
     setNotes((prevNotes) => [newNote, ...prevNotes]); 
     showToast('Note added successfully!');
   };
@@ -54,9 +54,9 @@ function App() {
     showToast('Note deleted!');
   };
 
-  const updateNote = (id, newTitle, newDescription, newCategory) => {
+  const updateNote = (id, newTitle, newDescription, newCategory, newColor) => {
     setNotes(notes.map(note => 
-      note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory } : note
+      note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory, color: newColor } : note
     ));
     showToast('Note updated successfully!');
   };

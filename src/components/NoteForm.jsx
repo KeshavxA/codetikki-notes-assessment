@@ -2,10 +2,13 @@ import { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+const NOTE_COLORS = ['default', 'red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+
 const NoteForm = ({ onAddNote }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Personal');
+  const [color, setColor] = useState('default');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
@@ -14,10 +17,11 @@ const NoteForm = ({ onAddNote }) => {
       setError('Error: Title cannot be empty.'); 
       return;
     }
-    onAddNote(title, description, category);
+    onAddNote(title, description, category, color);
     setTitle(''); 
     setDescription('');
     setCategory('Personal');
+    setColor('default');
     setError('');
   };
 
@@ -44,16 +48,30 @@ const NoteForm = ({ onAddNote }) => {
         className="rich-text-editor"
       />
 
-      <select 
-        value={category} 
-        onChange={(e) => setCategory(e.target.value)}
-        className="category-select"
-      >
-        <option value="Personal">Personal</option>
-        <option value="Work">Work</option>
-        <option value="Ideas">Ideas</option>
-        <option value="Other">Other</option>
-      </select>
+      <div className="form-row">
+        <select 
+          value={category} 
+          onChange={(e) => setCategory(e.target.value)}
+          className="category-select"
+        >
+          <option value="Personal">Personal</option>
+          <option value="Work">Work</option>
+          <option value="Ideas">Ideas</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <div className="color-picker">
+          {NOTE_COLORS.map(c => (
+            <button
+              key={c}
+              type="button"
+              className={`color-btn color-${c} ${color === c ? 'selected' : ''}`}
+              onClick={() => setColor(c)}
+              aria-label={`Select ${c} color`}
+            />
+          ))}
+        </div>
+      </div>
       
       <button 
         type="submit" 
