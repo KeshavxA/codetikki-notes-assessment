@@ -414,3 +414,119 @@ body.dark-mode .color-purple { background-color: #42275e; }
 /* Adjust Pinned styling for dark mode + colors */
 body.dark-mode .pinned-card.bg-default { background-color: #2a353a; }
 .pinned-card.bg-default { background-color: #f4fcff; }
+
+/* Tags Input Styles */
+.tags-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tags-list, .filter-tags, .note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-chip {
+  background: #e0e0e0;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+
+body.dark-mode .tag-chip {
+  background: #444;
+  color: #eee;
+}
+
+.tag-chip button.remove-tag-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+body.dark-mode .tag-chip button.remove-tag-btn {
+  color: #aaa;
+}
+
+.tag-chip button.remove-tag-btn:hover {
+  color: #d93025;
+}
+
+.tag-input {
+  flex-grow: 1;
+}
+
+.search-and-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-and-filter .search-container {
+  margin-bottom: 0;
+}
+
+.filter-tags-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #666;
+  margin-right: 5px;
+  align-self: center;
+}
+
+body.dark-mode .filter-tags-label {
+  color: #aaa;
+}
+
+button.tag-chip {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: all 0.2s;
+}
+
+body.dark-mode button.tag-chip {
+  border-color: #555;
+}
+
+button.tag-chip:hover {
+  background: #d0d0d0;
+}
+
+body.dark-mode button.tag-chip:hover {
+  background: #555;
+}
+
+button.tag-chip.active {
+  background: #0077b6;
+  color: #fff;
+  border-color: #0077b6;
+}
+
+body.dark-mode button.tag-chip.active {
+  background: #0077b6;
+  color: #fff;
+}
+
+.tag-chip.readonly {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .tag-chip.readonly {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.note-tags {
+  margin-top: 10px;
+}

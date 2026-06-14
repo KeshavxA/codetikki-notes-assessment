@@ -14,6 +14,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
+  const [filterTags, setFilterTags] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true';
@@ -43,8 +44,8 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const addNote = (title, description, category, color) => {
-    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', isPinned: false };
+  const addNote = (title, description, category, color, tags) => {
+    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], isPinned: false };
     setNotes((prevNotes) => [newNote, ...prevNotes]); 
     showToast('Note added successfully!');
   };
@@ -54,9 +55,9 @@ function App() {
     showToast('Note deleted!');
   };
 
-  const updateNote = (id, newTitle, newDescription, newCategory, newColor) => {
+  const updateNote = (id, newTitle, newDescription, newCategory, newColor, newTags) => {
     setNotes(notes.map(note => 
-      note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory, color: newColor } : note
+      note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory, color: newColor, tags: newTags || [] } : note
     ));
     showToast('Note updated successfully!');
   };
@@ -73,8 +74,11 @@ function App() {
     const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
       (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = filterCategory === 'All' || note.category === filterCategory || (!note.category && filterCategory === 'Personal');
-    return matchesSearch && matchesCategory;
+    const matchesTags = filterTags.length === 0 || filterTags.every(tag => note.tags && note.tags.includes(tag));
+    return matchesSearch && matchesCategory && matchesTags;
   }).sort((a, b) => Number(b.isPinned || false) - Number(a.isPinned || false));
+
+  const allTags = Array.from(new Set(notes.flatMap(note => note.tags || [])));
 
   return (
     <div className="app-container">
@@ -90,25 +94,47 @@ function App() {
       <NoteForm onAddNote={addNote} />
       
       {notes.length > 0 && (
-        <div className="search-container">
-          <input 
-            type="text" 
-            placeholder="Search notes..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          <select 
-            value={filterCategory} 
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="filter-select"
-          >
-            <option value="All">All Categories</option>
-            <option value="Personal">Personal</option>
-            <option value="Work">Work</option>
-            <option value="Ideas">Ideas</option>
-            <option value="Other">Other</option>
-          </select>
+        <div className="search-and-filter">
+          <div className="search-container">
+            <input 
+              type="text" 
+              placeholder="Search notes..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            <select 
+              value={filterCategory} 
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="filter-select"
+            >
+              <option value="All">All Categories</option>
+              <option value="Personal">Personal</option>
+              <option value="Work">Work</option>
+              <option value="Ideas">Ideas</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          {allTags.length > 0 && (
+            <div className="filter-tags">
+              <span className="filter-tags-label">Filter by Tags:</span>
+              {allTags.map(tag => (
+                <button 
+                  key={tag} 
+                  className={`tag-chip ${filterTags.includes(tag) ? 'active' : ''}`}
+                  onClick={() => {
+                    if (filterTags.includes(tag)) {
+                      setFilterTags(filterTags.filter(t => t !== tag));
+                    } else {
+                      setFilterTags([...filterTags, tag]);
+                    }
+                  }}
+                >
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

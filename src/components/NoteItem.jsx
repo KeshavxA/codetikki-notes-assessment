@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactQuill from 'react-quill';
+import TagsInput from './TagsInput';
 import DOMPurify from 'dompurify';
 import 'react-quill/dist/quill.snow.css';
 
@@ -11,10 +12,11 @@ const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
   const [editDescription, setEditDescription] = useState(note.description);
   const [editCategory, setEditCategory] = useState(note.category || 'Personal');
   const [editColor, setEditColor] = useState(note.color || 'default');
+  const [editTags, setEditTags] = useState(note.tags || []);
 
   const handleSave = () => {
     if (editTitle.trim()) {
-      onUpdate(note.id, editTitle, editDescription, editCategory, editColor);
+      onUpdate(note.id, editTitle, editDescription, editCategory, editColor, editTags);
       setIsEditing(false);
     }
   };
@@ -60,6 +62,9 @@ const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
             ))}
           </div>
         </div>
+
+        <TagsInput tags={editTags} setTags={setEditTags} />
+
         <div className="note-actions">
           <button className="save-btn" onClick={handleSave}>Save</button>
           <button className="cancel-btn" onClick={() => setIsEditing(false)}>Cancel</button>
@@ -91,6 +96,14 @@ const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
             <span>No description provided</span>
           )}
         </div>
+        
+        {note.tags && note.tags.length > 0 && (
+          <div className="note-tags">
+            {note.tags.map(tag => (
+              <span key={tag} className="tag-chip readonly">#{tag}</span>
+            ))}
+          </div>
+        )}
       </div>
       <div className="note-actions">
         <button className="pin-btn" onClick={() => onTogglePin(note.id)}>

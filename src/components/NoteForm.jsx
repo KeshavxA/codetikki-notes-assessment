@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactQuill from 'react-quill';
+import TagsInput from './TagsInput';
 import 'react-quill/dist/quill.snow.css';
 
 const NOTE_COLORS = ['default', 'red', 'orange', 'yellow', 'green', 'blue', 'purple'];
@@ -9,6 +10,7 @@ const NoteForm = ({ onAddNote }) => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Personal');
   const [color, setColor] = useState('default');
+  const [tags, setTags] = useState([]);
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
@@ -17,11 +19,12 @@ const NoteForm = ({ onAddNote }) => {
       setError('Error: Title cannot be empty.'); 
       return;
     }
-    onAddNote(title, description, category, color);
+    onAddNote(title, description, category, color, tags);
     setTitle(''); 
     setDescription('');
     setCategory('Personal');
     setColor('default');
+    setTags([]);
     setError('');
   };
 
@@ -72,6 +75,8 @@ const NoteForm = ({ onAddNote }) => {
           ))}
         </div>
       </div>
+
+      <TagsInput tags={tags} setTags={setTags} />
       
       <button 
         type="submit" 
