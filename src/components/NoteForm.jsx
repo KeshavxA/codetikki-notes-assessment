@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const NoteForm = ({ onAddNote }) => {
   const [title, setTitle] = useState('');
@@ -34,10 +36,12 @@ const NoteForm = ({ onAddNote }) => {
         {error && <p className="error-text">{error}</p>}
       </div>
       
-      <textarea
-        placeholder="Description (optional)"
+      <ReactQuill 
+        theme="snow"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={setDescription}
+        placeholder="Description (optional)"
+        className="rich-text-editor"
       />
 
       <select 

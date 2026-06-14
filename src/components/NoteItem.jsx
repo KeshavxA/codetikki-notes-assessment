@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import ReactQuill from 'react-quill';
+import DOMPurify from 'dompurify';
+import 'react-quill/dist/quill.snow.css';
 
 const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -23,10 +26,11 @@ const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
           className="edit-input"
           placeholder="Note Title"
         />
-        <textarea 
+        <ReactQuill 
+          theme="snow"
           value={editDescription} 
-          onChange={(e) => setEditDescription(e.target.value)} 
-          className="edit-textarea"
+          onChange={setEditDescription} 
+          className="edit-rich-text"
           placeholder="Note Description"
         />
         <select 
@@ -59,7 +63,17 @@ const NoteItem = ({ note, onDelete, onUpdate, onTogglePin }) => {
             {note.category || 'Personal'}
           </span>
         </div>
-        <p>Description: {note.description || 'No description provided'}</p>
+        <div className="note-description-container">
+          <strong>Description: </strong>
+          {note.description ? (
+            <div 
+              className="note-description-content"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.description) }} 
+            />
+          ) : (
+            <span>No description provided</span>
+          )}
+        </div>
       </div>
       <div className="note-actions">
         <button className="pin-btn" onClick={() => onTogglePin(note.id)}>
