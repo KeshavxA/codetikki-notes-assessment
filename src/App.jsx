@@ -15,6 +15,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterTags, setFilterTags] = useState([]);
+  const [currentView, setCurrentView] = useState('active'); // active, archived, trash
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true';
@@ -45,14 +46,21 @@ function App() {
   }, []);
 
   const addNote = (title, description, category, color, tags) => {
-    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], isPinned: false };
+    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], isPinned: false, status: 'active' };
     setNotes((prevNotes) => [newNote, ...prevNotes]); 
     showToast('Note added successfully!');
   };
 
-  const deleteNote = (id) => {
+  const changeNoteStatus = (id, newStatus) => {
+    setNotes(notes.map(note => note.id === id ? { ...note, status: newStatus } : note));
+    if (newStatus === 'trash') showToast('Note moved to trash.');
+    else if (newStatus === 'archived') showToast('Note archived.');
+    else if (newStatus === 'active') showToast('Note restored.');
+  };
+
+  const deleteNoteForever = (id) => {
     setNotes(notes.filter(note => note.id !== id));
-    showToast('Note deleted!');
+    showToast('Note permanently deleted!');
   };
 
   const updateNote = (id, newTitle, newDescription, newCategory, newColor, newTags) => {
@@ -71,6 +79,9 @@ function App() {
   if (isLoading) return <Loader />; 
 
   const filteredNotes = notes.filter(note => {
+    const noteStatus = note.status || 'active';
+    if (noteStatus !== currentView) return false;
+    
     const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
       (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = filterCategory === 'All' || note.category === filterCategory || (!note.category && filterCategory === 'Personal');
@@ -91,9 +102,16 @@ function App() {
           {isDarkMode ? '☀️ Light' : '🌙 Dark'}
         </button>
       </div>
-      <NoteForm onAddNote={addNote} />
+
+      <div className="view-tabs">
+        <button className={currentView === 'active' ? 'active-tab' : ''} onClick={() => setCurrentView('active')}>Notes</button>
+        <button className={currentView === 'archived' ? 'active-tab' : ''} onClick={() => setCurrentView('archived')}>Archive</button>
+        <button className={currentView === 'trash' ? 'active-tab' : ''} onClick={() => setCurrentView('trash')}>Trash</button>
+      </div>
+
+      {currentView === 'active' && <NoteForm onAddNote={addNote} />}
       
-      {notes.length > 0 && (
+      {notes.length > 0 && currentView !== 'trash' && (
         <div className="search-and-filter">
           <div className="search-container">
             <input 
@@ -138,12 +156,19 @@ function App() {
         </div>
       )}
 
-      {notes.length === 0 ? (
-        <EmptyState /> 
+      {notes.filter(n => (n.status || 'active') === currentView).length === 0 ? (
+        currentView === 'active' ? <EmptyState /> : <p className="no-results">No notes in {currentView}.</p>
       ) : filteredNotes.length === 0 ? (
         <p className="no-results">No notes found matching your filters</p>
       ) : (
-        <NoteList notes={filteredNotes} onDeleteNote={deleteNote} onUpdateNote={updateNote} onTogglePin={togglePin} />
+        <NoteList 
+          notes={filteredNotes} 
+          currentView={currentView}
+          onChangeStatus={changeNoteStatus}
+          onDeleteForever={deleteNoteForever}
+          onUpdateNote={updateNote} 
+          onTogglePin={togglePin} 
+        />
       )}
       <Toast message={toastMessage} />
     </div>

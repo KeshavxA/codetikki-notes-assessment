@@ -1,13 +1,15 @@
 import NoteItem from './NoteItem';
 
-const NoteList = ({ notes, onDeleteNote, onUpdateNote, onTogglePin }) => {
+const NoteList = ({ notes, currentView, onChangeStatus, onDeleteForever, onUpdateNote, onTogglePin }) => {
   return (
     <div className="note-list">
       {notes.map((note) => (
         <NoteItem 
           key={note.id} 
           note={note} 
-          onDelete={() => onDeleteNote(note.id)} 
+          currentView={currentView}
+          onChangeStatus={(newStatus) => onChangeStatus(note.id, newStatus)}
+          onDeleteForever={() => onDeleteForever(note.id)}
           onUpdate={onUpdateNote}
           onTogglePin={onTogglePin}
         />

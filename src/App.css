@@ -530,3 +530,65 @@ body.dark-mode .tag-chip.readonly {
 .note-tags {
   margin-top: 10px;
 }
+
+/* View Tabs */
+.view-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+body.dark-mode .view-tabs {
+  border-color: #333;
+}
+
+.view-tabs button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.view-tabs button:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+body.dark-mode .view-tabs button:hover {
+  background: #333;
+  color: #fff;
+}
+
+.view-tabs button.active-tab {
+  color: #0077b6;
+  background: #e6f4ea;
+}
+
+body.dark-mode .view-tabs button.active-tab {
+  color: #4da8da;
+  background: #2a353a;
+}
+
+/* Archive Button */
+.archive-btn {
+  background: #6c757d;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.archive-btn:hover {
+  background: #5a6268;
+}
