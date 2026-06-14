@@ -70,6 +70,26 @@ function App() {
     showToast('Note updated successfully!');
   };
 
+  const handleReorder = (sourceIndex, destinationIndex) => {
+    const draggedNoteId = filteredNotes[sourceIndex].id;
+    const targetNoteId = filteredNotes[destinationIndex].id;
+    
+    const sourceGlobalIndex = notes.findIndex(n => n.id === draggedNoteId);
+    
+    const newNotes = Array.from(notes);
+    const [removed] = newNotes.splice(sourceGlobalIndex, 1);
+    
+    const newTargetGlobalIndex = newNotes.findIndex(n => n.id === targetNoteId);
+    
+    let finalIndex = newTargetGlobalIndex;
+    if (sourceIndex < destinationIndex) {
+      finalIndex = newTargetGlobalIndex + 1;
+    }
+    
+    newNotes.splice(finalIndex, 0, removed);
+    setNotes(newNotes);
+  };
+
   const togglePin = (id) => {
     setNotes(notes.map(note => 
       note.id === id ? { ...note, isPinned: !note.isPinned } : note
@@ -168,6 +188,7 @@ function App() {
           onDeleteForever={deleteNoteForever}
           onUpdateNote={updateNote} 
           onTogglePin={togglePin} 
+          onReorder={handleReorder}
         />
       )}
       <Toast message={toastMessage} />

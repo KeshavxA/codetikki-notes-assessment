@@ -645,3 +645,17 @@ body.dark-mode .due-date-display.overdue {
 body.dark-mode .due-date-display.due-soon {
   color: #fbbc04;
 }
+
+/* Drag and Drop Reordering */
+.draggable-note-wrapper.dragging .note-card {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  transform: scale(1.02);
+  transition: transform 0.1s, box-shadow 0.1s;
+  z-index: 100;
+  border-color: #0077b6;
+}
+
+body.dark-mode .draggable-note-wrapper.dragging .note-card {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  border-color: #4da8da;
+}
