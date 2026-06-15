@@ -22,7 +22,33 @@ const NoteForm = ({ onAddNote }) => {
   const [color, setColor] = useState('default');
   const [tags, setTags] = useState([]);
   const [dueDate, setDueDate] = useState('');
+  const [attachments, setAttachments] = useState([]);
   const [error, setError] = useState('');
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      if (file.size > 500 * 1024) {
+        alert(`File ${file.name} is too large. Max size is 500KB.`);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAttachments(prev => [...prev, {
+          id: Date.now() + Math.random(),
+          name: file.name,
+          type: file.type,
+          dataUrl: reader.result
+        }]);
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = null;
+  };
+
+  const removeAttachment = (id) => {
+    setAttachments(prev => prev.filter(att => att.id !== id));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,13 +56,14 @@ const NoteForm = ({ onAddNote }) => {
       setError('Error: Title cannot be empty.'); 
       return;
     }
-    onAddNote(title, description, category, color, tags, dueDate);
+    onAddNote(title, description, category, color, tags, dueDate, attachments);
     setTitle(''); 
     setDescription('');
     setCategory('Personal');
     setColor('default');
     setTags([]);
     setDueDate('');
+    setAttachments([]);
     setError('');
   };
 
@@ -99,6 +126,33 @@ const NoteForm = ({ onAddNote }) => {
       </div>
 
       <TagsInput tags={tags} setTags={setTags} />
+
+      <div className="attachments-section">
+        <label className="attachment-btn">
+          📎 Attach Files
+          <input 
+            type="file" 
+            multiple 
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            accept="image/*,.pdf,.doc,.docx,.txt"
+          />
+        </label>
+        {attachments.length > 0 && (
+          <div className="attachment-previews">
+            {attachments.map(att => (
+              <div key={att.id} className="attachment-preview">
+                {att.type.startsWith('image/') ? (
+                  <img src={att.dataUrl} alt={att.name} className="attachment-thumb" />
+                ) : (
+                  <span className="attachment-icon">📄 {att.name}</span>
+                )}
+                <button type="button" onClick={() => removeAttachment(att.id)} className="remove-att-btn">×</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       
       <button 
         type="submit" 

@@ -659,3 +659,110 @@ body.dark-mode .draggable-note-wrapper.dragging .note-card {
   box-shadow: 0 8px 24px rgba(0,0,0,0.5);
   border-color: #4da8da;
 }
+
+/* Attachments Styles */
+.attachments-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attachment-btn {
+  display: inline-block;
+  background: #eee;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  width: fit-content;
+}
+
+body.dark-mode .attachment-btn {
+  background: #444;
+  color: #eee;
+  border-color: #555;
+}
+
+.attachment-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.attachment-preview {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.dark-mode .attachment-preview {
+  background: #333;
+  border-color: #555;
+}
+
+.attachment-thumb {
+  max-height: 60px;
+  max-width: 60px;
+  object-fit: contain;
+}
+
+.attachment-icon {
+  font-size: 12px;
+  padding: 0 5px;
+  color: #333;
+}
+
+body.dark-mode .attachment-icon {
+  color: #eee;
+}
+
+.attachment-link {
+  font-size: 13px;
+  color: #0077b6;
+  text-decoration: none;
+}
+
+body.dark-mode .attachment-link {
+  color: #4da8da;
+}
+
+.remove-att-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #d93025;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-attachments-view {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+body.dark-mode .note-attachments-view {
+  border-top-color: #444;
+}
+
+.attachment-preview.view-only {
+  border: none;
+  background: transparent;
+  padding: 0;
+}

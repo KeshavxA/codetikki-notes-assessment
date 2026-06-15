@@ -24,10 +24,36 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
   const [editColor, setEditColor] = useState(note.color || 'default');
   const [editTags, setEditTags] = useState(note.tags || []);
   const [editDueDate, setEditDueDate] = useState(note.dueDate || '');
+  const [editAttachments, setEditAttachments] = useState(note.attachments || []);
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      if (file.size > 500 * 1024) {
+        alert(`File ${file.name} is too large. Max size is 500KB.`);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditAttachments(prev => [...prev, {
+          id: Date.now() + Math.random(),
+          name: file.name,
+          type: file.type,
+          dataUrl: reader.result
+        }]);
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = null;
+  };
+
+  const removeAttachment = (id) => {
+    setEditAttachments(prev => prev.filter(att => att.id !== id));
+  };
 
   const handleSave = () => {
     if (editTitle.trim()) {
-      onUpdate(note.id, editTitle, editDescription, editCategory, editColor, editTags, editDueDate);
+      onUpdate(note.id, editTitle, editDescription, editCategory, editColor, editTags, editDueDate, editAttachments);
       setIsEditing(false);
     }
   };
@@ -85,6 +111,33 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         </div>
 
         <TagsInput tags={editTags} setTags={setEditTags} />
+
+        <div className="attachments-section">
+          <label className="attachment-btn">
+            📎 Attach Files
+            <input 
+              type="file" 
+              multiple 
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              accept="image/*,.pdf,.doc,.docx,.txt"
+            />
+          </label>
+          {editAttachments.length > 0 && (
+            <div className="attachment-previews">
+              {editAttachments.map(att => (
+                <div key={att.id} className="attachment-preview">
+                  {att.type.startsWith('image/') ? (
+                    <img src={att.dataUrl} alt={att.name} className="attachment-thumb" />
+                  ) : (
+                    <span className="attachment-icon" title={att.name}>📄 {att.name.length > 15 ? att.name.substring(0, 15) + '...' : att.name}</span>
+                  )}
+                  <button type="button" onClick={() => removeAttachment(att.id)} className="remove-att-btn">×</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="note-actions">
           <button className="save-btn" onClick={handleSave}>Save</button>
@@ -145,6 +198,27 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           )}
         </div>
         
+        {note.attachments && note.attachments.length > 0 && (
+          <div className="note-attachments-view">
+            <strong>Attachments: </strong>
+            <div className="attachment-previews">
+              {note.attachments.map(att => (
+                <div key={att.id} className="attachment-preview view-only">
+                  {att.type.startsWith('image/') ? (
+                    <a href={att.dataUrl} download={att.name} title={`Download ${att.name}`}>
+                      <img src={att.dataUrl} alt={att.name} className="attachment-thumb" />
+                    </a>
+                  ) : (
+                    <a href={att.dataUrl} download={att.name} className="attachment-link" title={`Download ${att.name}`}>
+                      📄 {att.name.length > 15 ? att.name.substring(0, 15) + '...' : att.name}
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {note.tags && note.tags.length > 0 && (
           <div className="note-tags">
             {note.tags.map(tag => (
