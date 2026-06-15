@@ -114,10 +114,66 @@ function App() {
   };
 
   const updateNote = (id, newTitle, newDescription, newCategory, newColor, newTags, newDueDate, newAttachments) => {
-    setNotes(notes.map(note =>
-      note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory, color: newColor, tags: newTags || [], dueDate: newDueDate || null, attachments: newAttachments || [] } : note
-    ));
+    setNotes(notes.map(note => {
+      if (note.id === id) {
+        const historySnapshot = {
+          title: note.title,
+          description: note.description,
+          category: note.category,
+          color: note.color,
+          tags: note.tags,
+          dueDate: note.dueDate,
+          attachments: note.attachments,
+          timestamp: new Date().toISOString()
+        };
+        const newHistory = [historySnapshot, ...(note.history || [])].slice(0, 5);
+        return { 
+          ...note, 
+          title: newTitle, 
+          description: newDescription, 
+          category: newCategory, 
+          color: newColor, 
+          tags: newTags || [], 
+          dueDate: newDueDate || null, 
+          attachments: newAttachments || [],
+          history: newHistory
+        };
+      }
+      return note;
+    }));
     showToast('Note updated successfully!');
+  };
+
+  const restoreNote = (id, historyItem) => {
+    setNotes(notes.map(note => {
+      if (note.id === id) {
+        const historySnapshot = {
+          title: note.title,
+          description: note.description,
+          category: note.category,
+          color: note.color,
+          tags: note.tags,
+          dueDate: note.dueDate,
+          attachments: note.attachments,
+          timestamp: new Date().toISOString()
+        };
+        const newHistory = [historySnapshot, ...(note.history || [])].slice(0, 5);
+
+        return {
+          ...note,
+          title: historyItem.title,
+          description: historyItem.description,
+          category: historyItem.category,
+          color: historyItem.color,
+          tags: historyItem.tags,
+          dueDate: historyItem.dueDate,
+          attachments: historyItem.attachments,
+          history: newHistory
+        };
+      }
+      return note;
+    }));
+    showToast('Note restored to previous version!');
   };
 
   const handleReorder = (sourceIndex, destinationIndex) => {
@@ -292,6 +348,7 @@ function App() {
           onUpdateNote={updateNote}
           onTogglePin={togglePin}
           onReorder={handleReorder}
+          onRestoreNote={restoreNote}
         />
       )}
       <Toast message={toastMessage} />

@@ -16,8 +16,9 @@ const quillModules = {
   ]
 };
 
-const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin }) => {
+const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [editTitle, setEditTitle] = useState(note.title);
   const [editDescription, setEditDescription] = useState(note.description);
   const [editCategory, setEditCategory] = useState(note.category || 'Personal');
@@ -232,6 +233,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
+            <button className="history-btn" onClick={() => setShowHistory(!showHistory)}>🕒 History</button>
             <button className="archive-btn" onClick={() => onChangeStatus('archived')}>Archive</button>
             <button className="delete-btn" onClick={() => onChangeStatus('trash')}>Delete</button>
           </>
@@ -240,6 +242,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
+            <button className="history-btn" onClick={() => setShowHistory(!showHistory)}>🕒 History</button>
             <button className="archive-btn" onClick={() => onChangeStatus('active')}>Unarchive</button>
             <button className="delete-btn" onClick={() => onChangeStatus('trash')}>Delete</button>
           </>
@@ -251,6 +254,32 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           </>
         )}
       </div>
+
+      {showHistory && (
+        <div className="note-history-section">
+          <h4>Version History</h4>
+          {note.history && note.history.length > 0 ? (
+            <ul className="history-list">
+              {note.history.map((h, i) => (
+                <li key={i} className="history-item">
+                  <span className="history-timestamp">{new Date(h.timestamp).toLocaleString()}</span>
+                  <button 
+                    className="restore-btn" 
+                    onClick={() => {
+                      onRestoreNote(h);
+                      setShowHistory(false);
+                    }}
+                  >
+                    Revert
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="no-history-text">No previous versions available.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
