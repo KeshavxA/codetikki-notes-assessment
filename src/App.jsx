@@ -15,6 +15,9 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterTags, setFilterTags] = useState([]);
+  const [filterColor, setFilterColor] = useState('All');
+  const [filterDueDate, setFilterDueDate] = useState('All');
+  const [showFilters, setShowFilters] = useState(false);
   const [currentView, setCurrentView] = useState('active');
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
@@ -253,7 +256,27 @@ function App() {
       (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = filterCategory === 'All' || note.category === filterCategory || (!note.category && filterCategory === 'Personal');
     const matchesTags = filterTags.length === 0 || filterTags.every(tag => note.tags && note.tags.includes(tag));
-    return matchesSearch && matchesCategory && matchesTags;
+    const matchesColor = filterColor === 'All' || note.color === filterColor || (!note.color && filterColor === 'default');
+    
+    let matchesDueDate = true;
+    if (filterDueDate !== 'All') {
+      if (!note.dueDate) {
+        matchesDueDate = false;
+      } else {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const due = new Date(note.dueDate);
+        due.setHours(0, 0, 0, 0);
+        const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+        
+        if (filterDueDate === 'Overdue' && diffDays < 0) matchesDueDate = true;
+        else if (filterDueDate === 'Today' && diffDays === 0) matchesDueDate = true;
+        else if (filterDueDate === 'Upcoming' && diffDays > 0) matchesDueDate = true;
+        else matchesDueDate = false;
+      }
+    }
+
+    return matchesSearch && matchesCategory && matchesTags && matchesColor && matchesDueDate;
   }).sort((a, b) => Number(b.isPinned || false) - Number(a.isPinned || false));
 
   const allTags = Array.from(new Set(notes.flatMap(note => note.tags || [])));
@@ -292,7 +315,7 @@ function App() {
 
       {notes.length > 0 && currentView !== 'trash' && (
         <div className="search-and-filter">
-          <div className="search-container">
+          <div className="search-container" style={{ display: 'flex', gap: '10px' }}>
             <input
               type="text"
               placeholder="Search notes..."
@@ -300,36 +323,70 @@ function App() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="filter-select"
+            <button 
+              className="toggle-filters-btn" 
+              onClick={() => setShowFilters(!showFilters)}
             >
-              <option value="All">All Categories</option>
-              <option value="Personal">Personal</option>
-              <option value="Work">Work</option>
-              <option value="Ideas">Ideas</option>
-              <option value="Other">Other</option>
-            </select>
+              {showFilters ? 'Hide Filters' : 'Advanced Filters ⚙️'}
+            </button>
           </div>
-          {allTags.length > 0 && (
-            <div className="filter-tags">
-              <span className="filter-tags-label">Filter by Tags:</span>
-              {allTags.map(tag => (
-                <button
-                  key={tag}
-                  className={`tag-chip ${filterTags.includes(tag) ? 'active' : ''}`}
-                  onClick={() => {
-                    if (filterTags.includes(tag)) {
-                      setFilterTags(filterTags.filter(t => t !== tag));
-                    } else {
-                      setFilterTags([...filterTags, tag]);
-                    }
-                  }}
-                >
-                  #{tag}
-                </button>
-              ))}
+
+          {showFilters && (
+            <div className="advanced-filters-panel">
+              <div className="filter-group">
+                <label>Category:</label>
+                <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="filter-select">
+                  <option value="All">All Categories</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Work">Work</option>
+                  <option value="Ideas">Ideas</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <label>Color:</label>
+                <select value={filterColor} onChange={(e) => setFilterColor(e.target.value)} className="filter-select">
+                  <option value="All">All Colors</option>
+                  <option value="default">Default</option>
+                  <option value="#ffcdd2">Red</option>
+                  <option value="#c8e6c9">Green</option>
+                  <option value="#bbdefb">Blue</option>
+                  <option value="#fff9c4">Yellow</option>
+                  <option value="#e1bee7">Purple</option>
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <label>Due Date:</label>
+                <select value={filterDueDate} onChange={(e) => setFilterDueDate(e.target.value)} className="filter-select">
+                  <option value="All">Any Time</option>
+                  <option value="Overdue">Overdue</option>
+                  <option value="Today">Due Today</option>
+                  <option value="Upcoming">Upcoming</option>
+                </select>
+              </div>
+
+              {allTags.length > 0 && (
+                <div className="filter-tags">
+                  <span className="filter-tags-label">Tags:</span>
+                  {allTags.map(tag => (
+                    <button
+                      key={tag}
+                      className={`tag-chip ${filterTags.includes(tag) ? 'active' : ''}`}
+                      onClick={() => {
+                        if (filterTags.includes(tag)) {
+                          setFilterTags(filterTags.filter(t => t !== tag));
+                        } else {
+                          setFilterTags([...filterTags, tag]);
+                        }
+                      }}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
