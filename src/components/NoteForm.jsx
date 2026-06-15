@@ -5,6 +5,16 @@ import 'react-quill/dist/quill.snow.css';
 
 const NOTE_COLORS = ['default', 'red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, {'list': 'check'}],
+    ['link', 'image', 'code-block'],
+    ['clean']
+  ]
+};
+
 const NoteForm = ({ onAddNote }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -49,6 +59,7 @@ const NoteForm = ({ onAddNote }) => {
         theme="snow"
         value={description}
         onChange={setDescription}
+        modules={quillModules}
         placeholder="Description (optional)"
         className="rich-text-editor"
       />

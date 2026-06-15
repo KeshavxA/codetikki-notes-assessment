@@ -6,6 +6,16 @@ import 'react-quill/dist/quill.snow.css';
 
 const NOTE_COLORS = ['default', 'red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, {'list': 'check'}],
+    ['link', 'image', 'code-block'],
+    ['clean']
+  ]
+};
+
 const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(note.title);
@@ -36,6 +46,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           theme="snow"
           value={editDescription} 
           onChange={setEditDescription} 
+          modules={quillModules}
           className="edit-rich-text"
           placeholder="Note Description"
         />
@@ -125,8 +136,9 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <strong>Description: </strong>
           {note.description ? (
             <div 
-              className="note-description-content"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.description) }} 
+              className="note-description-content ql-editor"
+              style={{ padding: 0 }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.description, { ADD_ATTR: ['data-list', 'target'] }) }} 
             />
           ) : (
             <span>No description provided</span>

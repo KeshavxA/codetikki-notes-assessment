@@ -15,7 +15,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterTags, setFilterTags] = useState([]);
-  const [currentView, setCurrentView] = useState('active'); // active, archived, trash
+  const [currentView, setCurrentView] = useState('active');
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true';
@@ -47,7 +47,7 @@ function App() {
 
   const addNote = (title, description, category, color, tags, dueDate) => {
     const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], dueDate: dueDate || null, isPinned: false, status: 'active' };
-    setNotes((prevNotes) => [newNote, ...prevNotes]); 
+    setNotes((prevNotes) => [newNote, ...prevNotes]);
     showToast('Note added successfully!');
   };
 
@@ -64,7 +64,7 @@ function App() {
   };
 
   const updateNote = (id, newTitle, newDescription, newCategory, newColor, newTags, newDueDate) => {
-    setNotes(notes.map(note => 
+    setNotes(notes.map(note =>
       note.id === id ? { ...note, title: newTitle, description: newDescription, category: newCategory, color: newColor, tags: newTags || [], dueDate: newDueDate || null } : note
     ));
     showToast('Note updated successfully!');
@@ -73,36 +73,36 @@ function App() {
   const handleReorder = (sourceIndex, destinationIndex) => {
     const draggedNoteId = filteredNotes[sourceIndex].id;
     const targetNoteId = filteredNotes[destinationIndex].id;
-    
+
     const sourceGlobalIndex = notes.findIndex(n => n.id === draggedNoteId);
-    
+
     const newNotes = Array.from(notes);
     const [removed] = newNotes.splice(sourceGlobalIndex, 1);
-    
+
     const newTargetGlobalIndex = newNotes.findIndex(n => n.id === targetNoteId);
-    
+
     let finalIndex = newTargetGlobalIndex;
     if (sourceIndex < destinationIndex) {
       finalIndex = newTargetGlobalIndex + 1;
     }
-    
+
     newNotes.splice(finalIndex, 0, removed);
     setNotes(newNotes);
   };
 
   const togglePin = (id) => {
-    setNotes(notes.map(note => 
+    setNotes(notes.map(note =>
       note.id === id ? { ...note, isPinned: !note.isPinned } : note
     ));
   };
 
-  if (isLoading) return <Loader />; 
+  if (isLoading) return <Loader />;
 
   const filteredNotes = notes.filter(note => {
     const noteStatus = note.status || 'active';
     if (noteStatus !== currentView) return false;
-    
-    const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+
+    const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = filterCategory === 'All' || note.category === filterCategory || (!note.category && filterCategory === 'Personal');
     const matchesTags = filterTags.length === 0 || filterTags.every(tag => note.tags && note.tags.includes(tag));
@@ -115,8 +115,8 @@ function App() {
     <div className="app-container">
       <div className="header-row">
         <h1>My Notes</h1>
-        <button 
-          className="theme-toggle-btn" 
+        <button
+          className="theme-toggle-btn"
           onClick={() => setIsDarkMode(!isDarkMode)}
         >
           {isDarkMode ? '☀️ Light' : '🌙 Dark'}
@@ -130,19 +130,19 @@ function App() {
       </div>
 
       {currentView === 'active' && <NoteForm onAddNote={addNote} />}
-      
+
       {notes.length > 0 && currentView !== 'trash' && (
         <div className="search-and-filter">
           <div className="search-container">
-            <input 
-              type="text" 
-              placeholder="Search notes..." 
+            <input
+              type="text"
+              placeholder="Search notes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
-            <select 
-              value={filterCategory} 
+            <select
+              value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
               className="filter-select"
             >
@@ -157,8 +157,8 @@ function App() {
             <div className="filter-tags">
               <span className="filter-tags-label">Filter by Tags:</span>
               {allTags.map(tag => (
-                <button 
-                  key={tag} 
+                <button
+                  key={tag}
                   className={`tag-chip ${filterTags.includes(tag) ? 'active' : ''}`}
                   onClick={() => {
                     if (filterTags.includes(tag)) {
@@ -181,13 +181,13 @@ function App() {
       ) : filteredNotes.length === 0 ? (
         <p className="no-results">No notes found matching your filters</p>
       ) : (
-        <NoteList 
-          notes={filteredNotes} 
+        <NoteList
+          notes={filteredNotes}
           currentView={currentView}
           onChangeStatus={changeNoteStatus}
           onDeleteForever={deleteNoteForever}
-          onUpdateNote={updateNote} 
-          onTogglePin={togglePin} 
+          onUpdateNote={updateNote}
+          onTogglePin={togglePin}
           onReorder={handleReorder}
         />
       )}
