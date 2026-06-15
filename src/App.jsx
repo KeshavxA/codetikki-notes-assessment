@@ -45,6 +45,56 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  useEffect(() => {
+    const checkReminders = () => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const notifiedNotes = JSON.parse(localStorage.getItem('notifiedNotes') || '[]');
+      let newNotified = [...notifiedNotes];
+      let didNotify = false;
+
+      notes.forEach(note => {
+        if (!note.dueDate || note.status !== 'active') return;
+        
+        if (notifiedNotes.includes(note.id)) return; 
+
+        const due = new Date(note.dueDate);
+        due.setHours(0, 0, 0, 0);
+        
+        const diffTime = due - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays <= 0) {
+          const title = diffDays === 0 ? `Due Today: ${note.title}` : `Overdue: ${note.title}`;
+          const bodyText = note.description ? note.description.replace(/(<([^>]+)>)/gi, "").substring(0, 100) : "Check your notes app for details.";
+          
+          showToast(title);
+
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, { body: bodyText });
+          }
+
+          newNotified.push(note.id);
+          didNotify = true;
+        }
+      });
+
+      if (didNotify) {
+        localStorage.setItem('notifiedNotes', JSON.stringify(newNotified));
+      }
+    };
+
+    const timer = setTimeout(checkReminders, 2000);
+    return () => clearTimeout(timer);
+  }, [notes]);
+
   const addNote = (title, description, category, color, tags, dueDate, attachments) => {
     const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], dueDate: dueDate || null, attachments: attachments || [], isPinned: false, status: 'active' };
     setNotes((prevNotes) => [newNote, ...prevNotes]);
