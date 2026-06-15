@@ -35,19 +35,35 @@ body.dark-mode .app-container {
   margin: 0;
 }
 
-.theme-toggle-btn {
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.theme-toggle-btn, .header-btn {
   background: #eee;
   border: none;
   padding: 8px 12px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 13px;
+  font-family: inherit;
+  color: #333;
   transition: background 0.3s ease;
+  display: inline-block;
+  line-height: normal;
 }
 
-body.dark-mode .theme-toggle-btn {
+body.dark-mode .theme-toggle-btn,
+body.dark-mode .header-btn {
   background: #333;
   color: #fff;
+}
+
+.import-label {
+  margin: 0;
 }
 
 .note-form {

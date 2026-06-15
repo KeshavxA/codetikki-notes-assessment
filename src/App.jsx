@@ -140,6 +140,47 @@ function App() {
     setNotes(newNotes);
   };
 
+  const exportNotes = () => {
+    const dataStr = JSON.stringify(notes, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `my-notes-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast('Notes exported successfully!');
+  };
+
+  const importNotes = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedNotes = JSON.parse(e.target.result);
+        if (Array.isArray(importedNotes)) {
+          setNotes(prevNotes => {
+            const existingIds = new Set(prevNotes.map(n => n.id));
+            const newNotes = importedNotes.filter(n => !existingIds.has(n.id));
+            return [...newNotes, ...prevNotes];
+          });
+          showToast(`Notes imported successfully!`);
+        } else {
+          showToast('Error: Invalid backup file format.');
+        }
+      } catch (err) {
+        showToast('Error parsing the backup file.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = null;
+  };
+
   const togglePin = (id) => {
     setNotes(notes.map(note =>
       note.id === id ? { ...note, isPinned: !note.isPinned } : note
@@ -165,12 +206,24 @@ function App() {
     <div className="app-container">
       <div className="header-row">
         <h1>My Notes</h1>
-        <button
-          className="theme-toggle-btn"
-          onClick={() => setIsDarkMode(!isDarkMode)}
-        >
-          {isDarkMode ? '☀️ Light' : '🌙 Dark'}
-        </button>
+        <div className="header-actions">
+          <button className="header-btn" onClick={exportNotes}>📤 Export</button>
+          <label className="header-btn import-label">
+            📥 Import
+            <input 
+              type="file" 
+              accept=".json" 
+              onChange={importNotes} 
+              style={{ display: 'none' }} 
+            />
+          </label>
+          <button
+            className="theme-toggle-btn"
+            onClick={() => setIsDarkMode(!isDarkMode)}
+          >
+            {isDarkMode ? '☀️ Light' : '🌙 Dark'}
+          </button>
+        </div>
       </div>
 
       <div className="view-tabs">
