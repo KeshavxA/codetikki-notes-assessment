@@ -909,3 +909,44 @@ body.dark-mode .advanced-filters-panel {
 body.dark-mode .filter-group label {
   color: #aaa;
 }
+
+/* Audio Recording Styles */
+.attachment-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.record-btn {
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.stop-record-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+}
+
+.audio-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
+
+.audio-player {
+  height: 30px;
+  width: 200px;
+}

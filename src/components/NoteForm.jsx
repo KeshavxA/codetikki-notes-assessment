@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import TagsInput from './TagsInput';
 import 'react-quill/dist/quill.snow.css';
@@ -24,6 +24,10 @@ const NoteForm = ({ onAddNote }) => {
   const [dueDate, setDueDate] = useState('');
   const [attachments, setAttachments] = useState([]);
   const [error, setError] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const timerRef = useRef(null);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -48,6 +52,52 @@ const NoteForm = ({ onAddNote }) => {
 
   const removeAttachment = (id) => {
     setAttachments(prev => prev.filter(att => att.id !== id));
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = e => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAttachments(prev => [...prev, {
+            id: Date.now() + Math.random(),
+            name: `Voice_Note_${new Date().toLocaleTimeString().replace(/:/g, '-')}.webm`,
+            type: 'audio/webm',
+            dataUrl: reader.result
+          }]);
+        };
+        reader.readAsDataURL(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+
+      timerRef.current = setTimeout(() => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+          stopRecording();
+        }
+      }, 30000); 
+    } catch (err) {
+      alert("Microphone access denied or unavailable.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      clearTimeout(timerRef.current);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -128,24 +178,40 @@ const NoteForm = ({ onAddNote }) => {
       <TagsInput tags={tags} setTags={setTags} />
 
       <div className="attachments-section">
-        <label className="attachment-btn">
-          📎 Attach Files
-          <input 
-            type="file" 
-            multiple 
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-            accept="image/*,.pdf,.doc,.docx,.txt"
-          />
-        </label>
+        <div className="attachment-actions">
+          <label className="attachment-btn">
+            📎 Attach Files
+            <input 
+              type="file" 
+              multiple 
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              accept="image/*,.pdf,.doc,.docx,.txt"
+            />
+          </label>
+          {!isRecording ? (
+            <button type="button" className="attachment-btn record-btn" onClick={startRecording}>
+              🎤 Record Audio
+            </button>
+          ) : (
+            <button type="button" className="attachment-btn stop-record-btn" onClick={stopRecording}>
+              🛑 Stop Recording
+            </button>
+          )}
+        </div>
         {attachments.length > 0 && (
           <div className="attachment-previews">
             {attachments.map(att => (
               <div key={att.id} className="attachment-preview">
                 {att.type.startsWith('image/') ? (
                   <img src={att.dataUrl} alt={att.name} className="attachment-thumb" />
+                ) : att.type.startsWith('audio/') ? (
+                  <div className="audio-preview">
+                    <span className="attachment-icon">🎵 {att.name.length > 15 ? att.name.substring(0, 15) + '...' : att.name}</span>
+                    <audio controls src={att.dataUrl} className="audio-player" />
+                  </div>
                 ) : (
-                  <span className="attachment-icon">📄 {att.name}</span>
+                  <span className="attachment-icon">📄 {att.name.length > 15 ? att.name.substring(0, 15) + '...' : att.name}</span>
                 )}
                 <button type="button" onClick={() => removeAttachment(att.id)} className="remove-att-btn">×</button>
               </div>
