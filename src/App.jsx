@@ -18,6 +18,7 @@ function App() {
   const [filterColor, setFilterColor] = useState('All');
   const [filterDueDate, setFilterDueDate] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
   const [currentView, setCurrentView] = useState('active');
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
@@ -286,6 +287,7 @@ function App() {
       <div className="header-row">
         <h1>My Notes</h1>
         <div className="header-actions">
+          <button className="header-btn" onClick={() => setShowInsights(true)}>📊 Insights</button>
           <button className="header-btn" onClick={exportNotes}>📤 Export</button>
           <label className="header-btn import-label">
             📥 Import
@@ -409,6 +411,53 @@ function App() {
         />
       )}
       <Toast message={toastMessage} />
+
+      {showInsights && (
+        <div className="insights-modal-overlay">
+          <div className="insights-modal">
+            <div className="insights-header">
+              <h2>Statistics Dashboard</h2>
+              <button className="close-insights-btn" onClick={() => setShowInsights(false)}>×</button>
+            </div>
+            <div className="stat-grid">
+              <div className="stat-card">
+                <h3>Total Notes</h3>
+                <p>{notes.length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Active</h3>
+                <p>{notes.filter(n => (n.status || 'active') === 'active').length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Pinned</h3>
+                <p>{notes.filter(n => n.isPinned).length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>With Attachments</h3>
+                <p>{notes.filter(n => n.attachments && n.attachments.length > 0).length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>With Voice Notes</h3>
+                <p>{notes.filter(n => n.attachments && n.attachments.some(a => a.type.startsWith('audio/'))).length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Archived</h3>
+                <p>{notes.filter(n => n.status === 'archived').length}</p>
+              </div>
+            </div>
+            
+            <div className="insights-category-breakdown">
+              <h3>By Category</h3>
+              <ul>
+                <li>Personal: {notes.filter(n => (n.category || 'Personal') === 'Personal').length}</li>
+                <li>Work: {notes.filter(n => n.category === 'Work').length}</li>
+                <li>Ideas: {notes.filter(n => n.category === 'Ideas').length}</li>
+                <li>Other: {notes.filter(n => n.category === 'Other').length}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -978,3 +978,122 @@ body.dark-mode .export-pdf-btn {
 body.dark-mode .export-pdf-btn:hover {
   background: #263238;
 }
+
+/* Insights Modal Styles */
+.insights-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.insights-modal {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+body.dark-mode .insights-modal {
+  background: #2a2a2a;
+  color: #eee;
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+body.dark-mode .insights-header {
+  border-bottom-color: #444;
+}
+
+.close-insights-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+body.dark-mode .close-insights-btn {
+  color: #aaa;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+body.dark-mode .stat-card {
+  background: #333;
+  border-color: #444;
+}
+
+.stat-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+body.dark-mode .stat-card h3 {
+  color: #bbb;
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2196f3;
+}
+
+.insights-category-breakdown {
+  background: #f0f7ff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #bbdefb;
+}
+
+body.dark-mode .insights-category-breakdown {
+  background: #1e2a38;
+  border-color: #2c3e50;
+}
+
+.insights-category-breakdown h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.insights-category-breakdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.insights-category-breakdown li {
+  font-weight: 500;
+  margin-right: 15px;
+}
