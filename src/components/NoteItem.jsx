@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import TagsInput from './TagsInput';
 import DOMPurify from 'dompurify';
+import html2pdf from 'html2pdf.js';
 import 'react-quill/dist/quill.snow.css';
 
 const NOTE_COLORS = ['default', 'red', 'orange', 'yellow', 'green', 'blue', 'purple'];
@@ -100,6 +101,18 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
       setIsRecording(false);
       clearTimeout(timerRef.current);
     }
+  };
+
+  const exportToPDF = () => {
+    const element = document.getElementById(`note-content-${note.id}`);
+    const opt = {
+      margin:       10,
+      filename:     `${note.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_note.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
   };
 
   const handleSave = () => {
@@ -233,7 +246,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
 
   return (
     <div className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}>
-      <div className="note-content">
+      <div className="note-content" id={`note-content-${note.id}`}>
         <div className="note-header">
           <h3>
             {note.isPinned && <span className="pin-icon">📌</span>}
@@ -303,6 +316,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
       <div className="note-actions">
         {currentView === 'active' && (
           <>
+            <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
             <button className="history-btn" onClick={() => setShowHistory(!showHistory)}>🕒 History</button>
@@ -312,6 +326,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         )}
         {currentView === 'archived' && (
           <>
+            <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
             <button className="history-btn" onClick={() => setShowHistory(!showHistory)}>🕒 History</button>
