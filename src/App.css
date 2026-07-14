@@ -1097,3 +1097,14 @@ body.dark-mode .insights-category-breakdown {
   font-weight: 500;
   margin-right: 15px;
 }
+.text-counts {
+  text-align: right;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.dark-mode .text-counts {
+  color: #aaa;
+}

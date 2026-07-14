@@ -140,6 +140,11 @@ const NoteForm = ({ onAddNote }) => {
         placeholder="Description (optional)"
         className="rich-text-editor"
       />
+      <div className="text-counts">
+        <small>
+          {description.replace(/(<([^>]+)>)/gi, "").trim() ? description.replace(/(<([^>]+)>)/gi, "").trim().split(/\s+/).length : 0} words | {description.replace(/(<([^>]+)>)/gi, "").length} characters
+        </small>
+      </div>
 
       <div className="form-row">
         <div className="form-row-group">
