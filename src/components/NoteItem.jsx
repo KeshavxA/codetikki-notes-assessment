@@ -325,6 +325,10 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
             ))}
           </div>
         )}
+        
+        <div className="note-timestamp" style={{ marginTop: '10px', fontSize: '0.75rem', opacity: 0.7 }}>
+          <em>Last edited: {note.updatedAt ? new Date(note.updatedAt).toLocaleString() : 'N/A'}</em>
+        </div>
       </div>
       <div className="note-actions">
         {currentView === 'active' && (

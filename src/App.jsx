@@ -100,7 +100,7 @@ function App() {
   }, [notes]);
 
   const addNote = (title, description, category, color, tags, dueDate, attachments) => {
-    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], dueDate: dueDate || null, attachments: attachments || [], isPinned: false, status: 'active' };
+    const newNote = { id: Date.now(), title, description, category: category || 'Personal', color: color || 'default', tags: tags || [], dueDate: dueDate || null, attachments: attachments || [], isPinned: false, status: 'active', updatedAt: new Date().toISOString() };
     setNotes((prevNotes) => [newNote, ...prevNotes]);
     showToast('Note added successfully!');
   };
@@ -147,7 +147,8 @@ function App() {
           tags: newTags || [], 
           dueDate: newDueDate || null, 
           attachments: newAttachments || [],
-          history: newHistory
+          history: newHistory,
+          updatedAt: new Date().toISOString()
         };
       }
       return note;
@@ -179,7 +180,8 @@ function App() {
           tags: historyItem.tags,
           dueDate: historyItem.dueDate,
           attachments: historyItem.attachments,
-          history: newHistory
+          history: newHistory,
+          updatedAt: new Date().toISOString()
         };
       }
       return note;
@@ -194,7 +196,8 @@ function App() {
       ...noteToDuplicate,
       id: Date.now(),
       title: `${noteToDuplicate.title} (Copy)`,
-      history: []
+      history: [],
+      updatedAt: new Date().toISOString()
     };
     setNotes((prevNotes) => [newNote, ...prevNotes]);
     showToast('Note duplicated successfully!');
