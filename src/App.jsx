@@ -117,6 +117,13 @@ function App() {
     showToast('Note permanently deleted!');
   };
 
+  const emptyTrash = () => {
+    if (window.confirm("Are you sure you want to permanently delete all items in the trash?")) {
+      setNotes(notes.filter(note => note.status !== 'trash'));
+      showToast('Trash emptied!');
+    }
+  };
+
   const updateNote = (id, newTitle, newDescription, newCategory, newColor, newTags, newDueDate, newAttachments) => {
     setNotes(notes.map(note => {
       if (note.id === id) {
@@ -335,6 +342,14 @@ function App() {
       </div>
 
       {currentView === 'active' && <NoteForm onAddNote={addNote} />}
+
+      {currentView === 'trash' && notes.filter(n => n.status === 'trash').length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 0' }}>
+          <button className="delete-btn" onClick={emptyTrash} style={{ padding: '8px 16px' }}>
+            🗑️ Empty Trash
+          </button>
+        </div>
+      )}
 
       {notes.length > 0 && currentView !== 'trash' && (
         <div className="search-and-filter">
