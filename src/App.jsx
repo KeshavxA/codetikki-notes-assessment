@@ -260,6 +260,14 @@ function App() {
     ));
   };
 
+  const clearFilters = () => {
+    setSearchTerm('');
+    setFilterCategory('All');
+    setFilterColor('All');
+    setFilterDueDate('All');
+    setFilterTags([]);
+  };
+
   if (isLoading) return <Loader />;
 
   const filteredNotes = notes.filter(note => {
@@ -348,6 +356,9 @@ function App() {
 
           {showFilters && (
             <div className="advanced-filters-panel">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+                <button className="clear-filters-btn" onClick={clearFilters}>Reset All Filters</button>
+              </div>
               <div className="filter-group">
                 <label>Category:</label>
                 <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="filter-select">

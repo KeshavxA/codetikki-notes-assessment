@@ -1108,3 +1108,23 @@ body.dark-mode .insights-category-breakdown {
 .dark-mode .text-counts {
   color: #aaa;
 }
+
+.clear-filters-btn {
+  background: none;
+  border: 1px solid #ccc;
+  color: #666;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.clear-filters-btn:hover {
+  background: #f0f0f0;
+}
+.dark-mode .clear-filters-btn {
+  border-color: #555;
+  color: #ddd;
+}
+.dark-mode .clear-filters-btn:hover {
+  background: #444;
+}
