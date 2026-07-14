@@ -180,6 +180,19 @@ function App() {
     showToast('Note restored to previous version!');
   };
 
+  const duplicateNote = (id) => {
+    const noteToDuplicate = notes.find(n => n.id === id);
+    if (!noteToDuplicate) return;
+    const newNote = {
+      ...noteToDuplicate,
+      id: Date.now(),
+      title: `${noteToDuplicate.title} (Copy)`,
+      history: []
+    };
+    setNotes((prevNotes) => [newNote, ...prevNotes]);
+    showToast('Note duplicated successfully!');
+  };
+
   const handleReorder = (sourceIndex, destinationIndex) => {
     const draggedNoteId = filteredNotes[sourceIndex].id;
     const targetNoteId = filteredNotes[destinationIndex].id;
@@ -408,6 +421,7 @@ function App() {
           onTogglePin={togglePin}
           onReorder={handleReorder}
           onRestoreNote={restoreNote}
+          onDuplicateNote={duplicateNote}
         />
       )}
       <Toast message={toastMessage} />

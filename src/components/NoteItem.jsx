@@ -17,7 +17,7 @@ const quillModules = {
   ]
 };
 
-const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote }) => {
+const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote, onDuplicate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [editTitle, setEditTitle] = useState(note.title);
@@ -318,6 +318,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
+            <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
             <button className="history-btn" onClick={() => setShowHistory(!showHistory)}>🕒 History</button>
             <button className="archive-btn" onClick={() => onChangeStatus('archived')}>Archive</button>
@@ -328,6 +329,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
+            <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
             <button className="history-btn" onClick={() => setShowHistory(!showHistory)}>🕒 History</button>
             <button className="archive-btn" onClick={() => onChangeStatus('active')}>Unarchive</button>
