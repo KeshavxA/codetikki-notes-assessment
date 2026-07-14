@@ -20,6 +20,7 @@ const quillModules = {
 const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote, onDuplicate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const [editTitle, setEditTitle] = useState(note.title);
   const [editDescription, setEditDescription] = useState(note.description);
   const [editCategory, setEditCategory] = useState(note.category || 'Personal');
@@ -113,6 +114,18 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(element).save();
+  };
+
+  const handleCopy = () => {
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = note.description || '';
+    const textDesc = tempElement.textContent || tempElement.innerText || '';
+    const textToCopy = `Title: ${note.title}\n\nDescription:\n${textDesc}`;
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    });
   };
 
   const handleSave = () => {
@@ -317,6 +330,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         {currentView === 'active' && (
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
+            <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
@@ -328,6 +342,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         {currentView === 'archived' && (
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
+            <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
