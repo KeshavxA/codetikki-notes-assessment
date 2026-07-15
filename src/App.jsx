@@ -24,6 +24,7 @@ function App() {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true';
   });
+  const [sortBy, setSortBy] = useState('newest');
   const [toastMessage, setToastMessage] = useState('');
 
   const showToast = (msg) => {
@@ -309,7 +310,20 @@ function App() {
     }
 
     return matchesSearch && matchesCategory && matchesTags && matchesColor && matchesDueDate;
-  }).sort((a, b) => Number(b.isPinned || false) - Number(a.isPinned || false));
+  }).sort((a, b) => {
+    if (b.isPinned !== a.isPinned) return Number(b.isPinned || false) - Number(a.isPinned || false);
+    
+    if (sortBy === 'newest') {
+      return b.id - a.id;
+    } else if (sortBy === 'oldest') {
+      return a.id - b.id;
+    } else if (sortBy === 'az') {
+      return a.title.localeCompare(b.title);
+    } else if (sortBy === 'za') {
+      return b.title.localeCompare(a.title);
+    }
+    return 0;
+  });
 
   const allTags = Array.from(new Set(notes.flatMap(note => note.tags || [])));
 
@@ -364,6 +378,16 @@ function App() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)} 
+              className="filter-select sort-select"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="az">Title (A-Z)</option>
+              <option value="za">Title (Z-A)</option>
+            </select>
             <button 
               className="toggle-filters-btn" 
               onClick={() => setShowFilters(!showFilters)}
