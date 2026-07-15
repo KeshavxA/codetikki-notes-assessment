@@ -326,8 +326,13 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           </div>
         )}
         
-        <div className="note-timestamp" style={{ marginTop: '10px', fontSize: '0.75rem', opacity: 0.7 }}>
+        <div className="note-footer-info" style={{ marginTop: '10px', fontSize: '0.75rem', opacity: 0.7, display: 'flex', justifyContent: 'space-between' }}>
           <em>Last edited: {note.updatedAt ? new Date(note.updatedAt).toLocaleString() : 'N/A'}</em>
+          <span>📖 {(() => {
+            const text = (note.description || '').replace(/(<([^>]+)>)/gi, "").trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            return `${Math.ceil(words / 200) || 1} min read`;
+          })()}</span>
         </div>
       </div>
       <div className="note-actions">
