@@ -26,6 +26,19 @@ function App() {
   });
   const [sortBy, setSortBy] = useState('newest');
   const [toastMessage, setToastMessage] = useState('');
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -527,6 +540,12 @@ function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {showBackToTop && (
+        <button className="back-to-top-btn" onClick={scrollToTop} title="Back to Top">
+          ⬆️
+        </button>
       )}
     </div>
   );

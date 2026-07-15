@@ -1146,3 +1146,37 @@ body.dark-mode .insights-category-breakdown {
 .dark-mode .clear-filters-btn:hover {
   background: #444;
 }
+
+/* Back to Top Button */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #607d8b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.back-to-top-btn:hover {
+  transform: scale(1.1);
+  background-color: #455a64;
+}
+
+body.dark-mode .back-to-top-btn {
+  background-color: #37474f;
+}
+
+body.dark-mode .back-to-top-btn:hover {
+  background-color: #263238;
+}
