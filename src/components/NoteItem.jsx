@@ -141,6 +141,22 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     });
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        const textDesc = (note.description || '').replace(/(<([^>]+)>)/gi, "").trim();
+        await navigator.share({
+          title: note.title,
+          text: textDesc,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      alert("Web Share API is not supported in your browser.");
+    }
+  };
+
   const handleSave = () => {
     if (editTitle.trim()) {
       onUpdate(note.id, editTitle, editDescription, editCategory, editColor, editTags, editDueDate, editAttachments);
