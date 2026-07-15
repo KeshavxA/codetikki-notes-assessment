@@ -1,7 +1,7 @@
 import NoteItem from './NoteItem';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const NoteList = ({ notes, currentView, onChangeStatus, onDeleteForever, onUpdateNote, onTogglePin, onReorder, onRestoreNote, onDuplicateNote }) => {
+const NoteList = ({ notes, currentView, onChangeStatus, onDeleteForever, onUpdateNote, onTogglePin, onReorder, onRestoreNote, onDuplicateNote, searchTerm }) => {
   const handleDragEnd = (result) => {
     if (!result.destination) return;
     if (result.source.index === result.destination.index) return;
@@ -36,6 +36,7 @@ const NoteList = ({ notes, currentView, onChangeStatus, onDeleteForever, onUpdat
                     <NoteItem 
                       note={note} 
                       currentView={currentView}
+                      searchTerm={searchTerm}
                       onChangeStatus={(newStatus) => onChangeStatus(note.id, newStatus)}
                       onDeleteForever={() => onDeleteForever(note.id)}
                       onUpdate={onUpdateNote}

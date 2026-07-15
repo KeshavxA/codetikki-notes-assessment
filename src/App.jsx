@@ -470,6 +470,7 @@ function App() {
         <NoteList
           notes={filteredNotes}
           currentView={currentView}
+          searchTerm={searchTerm}
           onChangeStatus={changeNoteStatus}
           onDeleteForever={deleteNoteForever}
           onUpdateNote={updateNote}

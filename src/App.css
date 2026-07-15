@@ -286,8 +286,22 @@ body.dark-mode .pinned-card {
 
 .pin-icon {
   margin-right: 8px;
+  font-size: 1.2rem;
 }
 
+.search-highlight {
+  background-color: #ffd54f;
+  color: #000;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+body.dark-mode .search-highlight {
+  background-color: #ffb300;
+  color: #000;
+}
+
+/* --- Action Buttons (Card Bottom) --- */
 /* Rich Text Editor Styles */
 .rich-text-editor .ql-container {
   min-height: 100px;

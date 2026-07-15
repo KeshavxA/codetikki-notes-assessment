@@ -17,7 +17,7 @@ const quillModules = {
   ]
 };
 
-const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote, onDuplicate }) => {
+const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote, onDuplicate, searchTerm }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -286,13 +286,24 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
 
   const dueStatus = getDueDateStatus(note.dueDate);
 
+  const highlightText = (text, highlight) => {
+    if (!highlight || !highlight.trim()) {
+      return text;
+    }
+    const regex = new RegExp(`(${highlight})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, index) => 
+      regex.test(part) ? <mark key={index} className="search-highlight">{part}</mark> : part
+    );
+  };
+
   return (
     <div className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}>
       <div className="note-content" id={`note-content-${note.id}`}>
         <div className="note-header">
           <h3>
             {note.isPinned && <span className="pin-icon">📌</span>}
-            Title: {note.title}
+            Title: {highlightText(note.title, searchTerm)}
           </h3>
           <span className={`category-badge cat-${(note.category || 'Personal').toLowerCase()}`}>
             {note.category || 'Personal'}
