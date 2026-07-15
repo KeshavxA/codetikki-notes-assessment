@@ -114,8 +114,10 @@ function App() {
   };
 
   const deleteNoteForever = (id) => {
-    setNotes(notes.filter(note => note.id !== id));
-    showToast('Note permanently deleted!');
+    if (window.confirm("Are you sure you want to permanently delete this note?")) {
+      setNotes(notes.filter(note => note.id !== id));
+      showToast('Note permanently deleted!');
+    }
   };
 
   const emptyTrash = () => {
