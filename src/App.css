@@ -952,7 +952,8 @@ body.dark-mode .filter-group label {
 }
 
 /* Export PDF Button Styles */
-.export-pdf-btn {
+.export-pdf-btn,
+.export-txt-btn {
   background: #607d8b;
   color: white;
   border: none;
@@ -967,15 +968,18 @@ body.dark-mode .filter-group label {
   gap: 5px;
 }
 
-.export-pdf-btn:hover {
+.export-pdf-btn:hover,
+.export-txt-btn:hover {
   background: #455a64;
 }
 
-body.dark-mode .export-pdf-btn {
+body.dark-mode .export-pdf-btn,
+body.dark-mode .export-txt-btn {
   background: #37474f;
 }
 
-body.dark-mode .export-pdf-btn:hover {
+body.dark-mode .export-pdf-btn:hover,
+body.dark-mode .export-txt-btn:hover {
   background: #263238;
 }
 

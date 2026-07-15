@@ -116,6 +116,19 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     html2pdf().set(opt).from(element).save();
   };
 
+  const exportToTXT = () => {
+    const textDesc = (note.description || '').replace(/(<([^>]+)>)/gi, "").trim();
+    const textContent = `Title: ${note.title}\nCategory: ${note.category || 'Personal'}\nDate: ${note.dueDate ? new Date(note.dueDate).toLocaleDateString() : 'No due date'}\n\nDescription:\n${textDesc}`;
+    
+    const element = document.createElement("a");
+    const file = new Blob([textContent], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `${note.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_note.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   const handleCopy = () => {
     const tempElement = document.createElement('div');
     tempElement.innerHTML = note.description || '';
@@ -339,6 +352,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         {currentView === 'active' && (
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
+            <button className="export-txt-btn" onClick={exportToTXT} title="Export as TXT">📄 Export TXT</button>
             <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
@@ -351,6 +365,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         {currentView === 'archived' && (
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
+            <button className="export-txt-btn" onClick={exportToTXT} title="Export as TXT">📄 Export TXT</button>
             <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
