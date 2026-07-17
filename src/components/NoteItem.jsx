@@ -129,6 +129,35 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     document.body.removeChild(element);
   };
 
+  const handlePrint = () => {
+    const printWindow = window.open('', '_blank');
+    const textDesc = (note.description || '').replace(/(<([^>]+)>)/gi, "").trim();
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print - ${note.title}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+            h1 { margin-bottom: 5px; }
+            .meta { color: #555; margin-bottom: 20px; font-size: 0.9rem; }
+            .content { white-space: pre-wrap; }
+          </style>
+        </head>
+        <body>
+          <h1>${note.title}</h1>
+          <div class="meta">
+            Category: ${note.category || 'Personal'} | Date: ${note.dueDate ? new Date(note.dueDate).toLocaleDateString() : 'No due date'}
+          </div>
+          <div class="content">${textDesc}</div>
+          <script>
+            window.onload = function() { window.print(); window.close(); }
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   const handleCopy = () => {
     const tempElement = document.createElement('div');
     tempElement.innerHTML = note.description || '';
@@ -405,6 +434,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="export-txt-btn" onClick={exportToTXT} title="Export as TXT">📄 Export TXT</button>
+            <button className="print-btn" onClick={handlePrint} title="Print Note">🖨️ Print</button>
             <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
@@ -418,6 +448,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           <>
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="export-txt-btn" onClick={exportToTXT} title="Export as TXT">📄 Export TXT</button>
+            <button className="print-btn" onClick={handlePrint} title="Print Note">🖨️ Print</button>
             <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
