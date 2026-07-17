@@ -297,6 +297,23 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     );
   };
 
+  const timeAgo = (dateString) => {
+    if (!dateString) return 'N/A';
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffMs = now - past;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    
+    return past.toLocaleDateString();
+  };
+
   return (
     <div className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}>
       <div className="note-content" id={`note-content-${note.id}`}>
@@ -367,7 +384,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         )}
         
         <div className="note-footer-info" style={{ marginTop: '10px', fontSize: '0.75rem', opacity: 0.7, display: 'flex', justifyContent: 'space-between' }}>
-          <em>Last edited: {note.updatedAt ? new Date(note.updatedAt).toLocaleString() : 'N/A'}</em>
+          <em>Last edited: {timeAgo(note.updatedAt)}</em>
           <span>📖 {(() => {
             const text = (note.description || '').replace(/(<([^>]+)>)/gi, "").trim();
             const words = text ? text.split(/\s+/).length : 0;
