@@ -403,13 +403,25 @@ function App() {
       {notes.length > 0 && currentView !== 'trash' && (
         <div className="search-and-filter">
           <div className="search-container" style={{ display: 'flex', gap: '10px' }}>
-            <input
-              type="text"
-              placeholder="Search notes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
+            <div className="search-input-wrapper" style={{ position: 'relative', flex: 1 }}>
+              <input
+                type="text"
+                placeholder="Search notes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+                style={{ width: '100%', boxSizing: 'border-box' }}
+              />
+              {searchTerm && (
+                <button 
+                  className="clear-search-btn" 
+                  onClick={() => setSearchTerm('')}
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value)} 
