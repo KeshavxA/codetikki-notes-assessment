@@ -117,8 +117,14 @@ const NoteForm = ({ onAddNote }) => {
     setError('');
   };
 
+  const handleKeyDown = (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <form className="note-form" onSubmit={handleSubmit}>
+    <form className="note-form" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
       <div className="input-group">
         <input
           type="text"
