@@ -299,6 +299,18 @@ function App() {
     setFilterTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
   };
 
+  const calculateTagFrequency = () => {
+    const tagCount = {};
+    notes.forEach(note => {
+      if (note.tags) {
+        note.tags.forEach(tag => {
+          tagCount[tag] = (tagCount[tag] || 0) + 1;
+        });
+      }
+    });
+    return Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
+  };
+
   if (isLoading) return <Loader />;
 
   const filteredNotes = notes.filter(note => {
@@ -543,6 +555,27 @@ function App() {
                 <li>Ideas: {notes.filter(n => n.category === 'Ideas').length}</li>
                 <li>Other: {notes.filter(n => n.category === 'Other').length}</li>
               </ul>
+            </div>
+            
+            <div className="insights-tag-cloud" style={{ marginTop: '20px' }}>
+              <h3>Tag Cloud</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                {calculateTagFrequency().map(([tag, count]) => (
+                  <span 
+                    key={tag} 
+                    style={{ 
+                      fontSize: `${Math.min(1.5, 0.8 + count * 0.1)}rem`,
+                      backgroundColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                      padding: '5px 10px',
+                      borderRadius: '15px',
+                      display: 'inline-block'
+                    }}
+                  >
+                    #{tag} <small style={{ opacity: 0.7 }}>({count})</small>
+                  </span>
+                ))}
+                {calculateTagFrequency().length === 0 && <span style={{ opacity: 0.6 }}>No tags used yet.</span>}
+              </div>
             </div>
           </div>
         </div>
