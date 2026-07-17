@@ -1208,3 +1208,9 @@ body.dark-mode .back-to-top-btn:hover {
 body.dark-mode .read-more-toggle-btn {
   color: #90caf9;
 }
+
+/* Warning Styles for Note Form */
+input.warning-border {
+  border-color: #f57c00 !important;
+  outline-color: #f57c00 !important;
+}

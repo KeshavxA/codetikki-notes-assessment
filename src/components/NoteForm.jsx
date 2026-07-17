@@ -134,7 +134,13 @@ const NoteForm = ({ onAddNote }) => {
             setTitle(e.target.value);
             if (e.target.value.trim()) setError(''); 
           }}
+          className={title.length > 60 ? 'warning-border' : ''}
         />
+        {title.length > 60 && (
+          <small className="warning-text" style={{ color: '#f57c00', marginTop: '5px', display: 'block' }}>
+            Title is getting long ({title.length}/60 recommended).
+          </small>
+        )}
         {error && <p className="error-text">{error}</p>}
       </div>
       
