@@ -17,7 +17,7 @@ const quillModules = {
   ]
 };
 
-const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote, onDuplicate, searchTerm }) => {
+const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate, onTogglePin, onRestoreNote, onDuplicate, searchTerm, onTagClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -378,7 +378,15 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         {note.tags && note.tags.length > 0 && (
           <div className="note-tags">
             {note.tags.map(tag => (
-              <span key={tag} className="tag-chip readonly">#{tag}</span>
+              <span 
+                key={tag} 
+                className="tag-chip readonly" 
+                onClick={() => onTagClick && onTagClick(tag)}
+                style={{ cursor: 'pointer' }}
+                title={`Filter by #${tag}`}
+              >
+                #{tag}
+              </span>
             ))}
           </div>
         )}

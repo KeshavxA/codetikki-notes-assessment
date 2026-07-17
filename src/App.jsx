@@ -294,6 +294,11 @@ function App() {
     setFilterTags([]);
   };
 
+  const toggleTagFilter = (tag) => {
+    setShowFilters(true);
+    setFilterTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+  };
+
   if (isLoading) return <Loader />;
 
   const filteredNotes = notes.filter(note => {
@@ -491,6 +496,7 @@ function App() {
           onReorder={handleReorder}
           onRestoreNote={restoreNote}
           onDuplicateNote={duplicateNote}
+          onTagClick={toggleTagFilter}
         />
       )}
       <Toast message={toastMessage} />
