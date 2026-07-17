@@ -21,6 +21,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [editTitle, setEditTitle] = useState(note.title);
   const [editDescription, setEditDescription] = useState(note.description);
   const [editCategory, setEditCategory] = useState(note.category || 'Personal');
@@ -367,13 +368,20 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         <div className="note-description-container">
           <strong>Description: </strong>
           {note.description ? (
-            <div 
-              className="note-description-content ql-editor"
-              style={{ padding: 0 }}
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.description, { ADD_ATTR: ['data-list', 'target'] }) }} 
-            />
+            <div className={`note-description-wrapper ${!isExpanded && (note.description.replace(/(<([^>]+)>)/gi, "").trim().length > 300) ? 'collapsed' : ''}`}>
+              <div 
+                className="note-description-content ql-editor"
+                style={{ padding: 0 }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.description, { ADD_ATTR: ['data-list', 'target'] }) }} 
+              />
+            </div>
           ) : (
             <span>No description provided</span>
+          )}
+          {(note.description && note.description.replace(/(<([^>]+)>)/gi, "").trim().length > 300) && (
+            <button className="read-more-toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
+              {isExpanded ? 'Show Less' : 'Read More'}
+            </button>
           )}
         </div>
         

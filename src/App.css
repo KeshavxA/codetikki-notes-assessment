@@ -1184,3 +1184,27 @@ body.dark-mode .back-to-top-btn {
 body.dark-mode .back-to-top-btn:hover {
   background-color: #263238;
 }
+
+/* Read More Toggle Styles */
+.note-description-wrapper.collapsed .note-description-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.read-more-toggle-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  font-size: 0.85rem;
+  padding: 5px 0 0 0;
+  cursor: pointer;
+  text-decoration: underline;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+body.dark-mode .read-more-toggle-btn {
+  color: #90caf9;
+}
