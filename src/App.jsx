@@ -539,9 +539,11 @@ function App() {
       )}
 
       {notes.filter(n => (n.status || 'active') === currentView).length === 0 ? (
-        currentView === 'active' ? <EmptyState /> : <p className="no-results">No notes in {currentView}.</p>
+        currentView === 'active' ? <EmptyState icon="📝" message="Your notes are empty" subtext="Create your first note above to get started!" /> 
+        : currentView === 'trash' ? <EmptyState icon="🗑️" message="Trash is empty" subtext="No notes have been deleted yet." />
+        : <EmptyState icon="🗄️" message="Archive is empty" subtext="You haven't archived any notes." />
       ) : filteredNotes.length === 0 ? (
-        <p className="no-results">No notes found matching your filters</p>
+        <EmptyState icon="🕵️‍♂️" message="No matches found" subtext="Try adjusting your search or clearing your filters." />
       ) : (
         <NoteList
           notes={filteredNotes}

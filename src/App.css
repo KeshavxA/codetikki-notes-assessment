@@ -1304,3 +1304,26 @@ body.dark-mode .copy-link-btn {
 body.dark-mode .copy-link-btn:hover {
   background: #263238;
 }
+
+/* Fun Empty States */
+.empty-state-container {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  opacity: 0.8;
+  animation: fadeIn 0.5s ease;
+}
+
+.empty-state-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.empty-state-container h3 {
+  margin-bottom: 10px;
+  color: inherit;
+}
+
+body.dark-mode .empty-state-container {
+  color: #aaa;
+}
