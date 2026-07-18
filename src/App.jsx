@@ -36,6 +36,20 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (window.location.hash && !isLoading && filteredNotes.length > 0) {
+      const id = window.location.hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.style.boxShadow = '0 0 20px #2196f3';
+          setTimeout(() => element.style.boxShadow = '', 2000);
+        }, 100);
+      }
+    }
+  }, [isLoading, filteredNotes]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

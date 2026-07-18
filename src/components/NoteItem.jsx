@@ -160,6 +160,14 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     printWindow.document.close();
   };
 
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}${window.location.pathname}#note-${note.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    });
+  };
+
   const handleCopy = () => {
     const tempElement = document.createElement('div');
     tempElement.innerHTML = note.description || '';
@@ -353,9 +361,11 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
 
   return (
     <div 
+      id={`note-${note.id}`}
       className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}
       onDoubleClick={handleDoubleClick}
       title="Double-click to edit"
+      style={{ transition: 'box-shadow 0.5s ease' }}
     >
       <div className="note-content" id={`note-content-${note.id}`}>
         <div className="note-header">
@@ -459,6 +469,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="export-txt-btn" onClick={exportToTXT} title="Export as TXT">📄 Export TXT</button>
             <button className="print-btn" onClick={handlePrint} title="Print Note">🖨️ Print</button>
+            <button className="copy-link-btn" onClick={handleCopyLink} title="Copy Deep Link">🔗 Link</button>
             <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>
@@ -473,6 +484,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
             <button className="export-pdf-btn" onClick={exportToPDF} title="Export as PDF">📄 Export PDF</button>
             <button className="export-txt-btn" onClick={exportToTXT} title="Export as TXT">📄 Export TXT</button>
             <button className="print-btn" onClick={handlePrint} title="Print Note">🖨️ Print</button>
+            <button className="copy-link-btn" onClick={handleCopyLink} title="Copy Deep Link">🔗 Link</button>
             <button className="copy-btn" onClick={handleCopy}>{isCopied ? 'Copied!' : 'Copy'}</button>
             <button className="pin-btn" onClick={() => onTogglePin(note.id)}>{note.isPinned ? 'Unpin' : 'Pin'}</button>
             <button className="duplicate-btn" onClick={onDuplicate}>Duplicate</button>

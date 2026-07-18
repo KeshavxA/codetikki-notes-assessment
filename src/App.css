@@ -1280,3 +1280,27 @@ body.dark-mode .clear-search-btn:hover {
 .close-preview-btn:hover {
   color: #ccc;
 }
+
+/* Copy Link Button */
+.copy-link-btn {
+  background: #607d8b;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background 0.2s;
+}
+
+.copy-link-btn:hover {
+  background: #455a64;
+}
+
+body.dark-mode .copy-link-btn {
+  background: #37474f;
+}
+
+body.dark-mode .copy-link-btn:hover {
+  background: #263238;
+}
