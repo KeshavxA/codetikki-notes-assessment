@@ -325,6 +325,16 @@ function App() {
     return Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
   };
 
+  const calculateTotalReadingTime = () => {
+    const activeNotes = notes.filter(n => (n.status || 'active') === 'active');
+    const totalWords = activeNotes.reduce((acc, note) => {
+      const text = note.description ? note.description.replace(/<[^>]*>?/gm, '') : '';
+      const words = text.split(/\s+/).filter(word => word.length > 0);
+      return acc + words.length;
+    }, 0);
+    return Math.ceil(totalWords / 200);
+  };
+
   if (isLoading) return <Loader />;
 
   const filteredNotes = notes.filter(note => {
@@ -580,6 +590,10 @@ function App() {
               <div className="stat-card">
                 <h3>Archived</h3>
                 <p>{notes.filter(n => n.status === 'archived').length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Reading Time</h3>
+                <p>{calculateTotalReadingTime()} min</p>
               </div>
             </div>
             
