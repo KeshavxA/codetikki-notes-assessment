@@ -353,6 +353,14 @@ function App() {
       return a.title.localeCompare(b.title);
     } else if (sortBy === 'za') {
       return b.title.localeCompare(a.title);
+    } else if (sortBy === 'due-asc') {
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return new Date(a.dueDate) - new Date(b.dueDate);
+    } else if (sortBy === 'due-desc') {
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return new Date(b.dueDate) - new Date(a.dueDate);
     }
     return 0;
   });
@@ -431,6 +439,8 @@ function App() {
               <option value="oldest">Oldest First</option>
               <option value="az">Title (A-Z)</option>
               <option value="za">Title (Z-A)</option>
+              <option value="due-asc">Due Date (Closest First)</option>
+              <option value="due-desc">Due Date (Furthest First)</option>
             </select>
             <button 
               className="toggle-filters-btn" 
