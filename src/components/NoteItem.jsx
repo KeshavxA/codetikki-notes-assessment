@@ -344,8 +344,18 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     return past.toLocaleDateString();
   };
 
+  const handleDoubleClick = (e) => {
+    if (!isEditing && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !e.target.closest('.note-actions')) {
+      setIsEditing(true);
+    }
+  };
+
   return (
-    <div className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}>
+    <div 
+      className={`note-card bg-${note.color || 'default'} ${note.isPinned ? 'pinned-card' : ''}`}
+      onDoubleClick={handleDoubleClick}
+      title="Double-click to edit"
+    >
       <div className="note-content" id={`note-content-${note.id}`}>
         <div className="note-header">
           <h3>
