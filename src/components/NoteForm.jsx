@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import TagsInput from './TagsInput';
 import 'react-quill/dist/quill.snow.css';
@@ -16,18 +16,28 @@ const quillModules = {
 };
 
 const NoteForm = ({ onAddNote }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Personal');
-  const [color, setColor] = useState('default');
-  const [tags, setTags] = useState([]);
-  const [dueDate, setDueDate] = useState('');
-  const [attachments, setAttachments] = useState([]);
+  const [title, setTitle] = useState(() => localStorage.getItem('draft_title') || '');
+  const [description, setDescription] = useState(() => localStorage.getItem('draft_description') || '');
+  const [category, setCategory] = useState(() => localStorage.getItem('draft_category') || 'Personal');
+  const [color, setColor] = useState(() => localStorage.getItem('draft_color') || 'default');
+  const [tags, setTags] = useState(() => JSON.parse(localStorage.getItem('draft_tags') || '[]'));
+  const [dueDate, setDueDate] = useState(() => localStorage.getItem('draft_dueDate') || '');
+  const [attachments, setAttachments] = useState(() => JSON.parse(localStorage.getItem('draft_attachments') || '[]'));
   const [error, setError] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('draft_title', title);
+    localStorage.setItem('draft_description', description);
+    localStorage.setItem('draft_category', category);
+    localStorage.setItem('draft_color', color);
+    localStorage.setItem('draft_tags', JSON.stringify(tags));
+    localStorage.setItem('draft_dueDate', dueDate);
+    localStorage.setItem('draft_attachments', JSON.stringify(attachments));
+  }, [title, description, category, color, tags, dueDate, attachments]);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -115,6 +125,8 @@ const NoteForm = ({ onAddNote }) => {
     setDueDate('');
     setAttachments([]);
     setError('');
+
+    ['draft_title', 'draft_description', 'draft_category', 'draft_color', 'draft_tags', 'draft_dueDate', 'draft_attachments'].forEach(key => localStorage.removeItem(key));
   };
 
   const handleKeyDown = (e) => {
