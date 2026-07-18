@@ -22,6 +22,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
   const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
   const [editTitle, setEditTitle] = useState(note.title);
   const [editDescription, setEditDescription] = useState(note.description);
   const [editCategory, setEditCategory] = useState(note.category || 'Personal');
@@ -402,9 +403,14 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
               {note.attachments.map(att => (
                 <div key={att.id} className="attachment-preview view-only">
                   {att.type.startsWith('image/') ? (
-                    <a href={att.dataUrl} download={att.name} title={`Download ${att.name}`}>
+                    <div 
+                      className="image-attachment-wrapper" 
+                      onClick={(e) => { e.stopPropagation(); setPreviewImage(att.dataUrl); }}
+                      title="Click to view fullscreen"
+                      style={{ cursor: 'pointer' }}
+                    >
                       <img src={att.dataUrl} alt={att.name} className="attachment-thumb" />
-                    </a>
+                    </div>
                   ) : att.type.startsWith('audio/') ? (
                     <div className="audio-preview">
                       <span className="attachment-icon">🎵 {att.name.length > 15 ? att.name.substring(0, 15) + '...' : att.name}</span>
@@ -507,6 +513,13 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
           ) : (
             <p className="no-history-text">No previous versions available.</p>
           )}
+        </div>
+      )}
+
+      {previewImage && (
+        <div className="image-preview-modal" onClick={(e) => { e.stopPropagation(); setPreviewImage(null); }}>
+          <button className="close-preview-btn" onClick={(e) => { e.stopPropagation(); setPreviewImage(null); }}>✕</button>
+          <img src={previewImage} alt="Fullscreen preview" className="fullscreen-image" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
     </div>
