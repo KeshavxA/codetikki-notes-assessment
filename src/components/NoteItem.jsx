@@ -353,6 +353,18 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     return past.toLocaleDateString();
   };
 
+  const getChecklistProgress = () => {
+    if (!note.description) return null;
+    const totalMatches = [...note.description.matchAll(/data-list="(check|checked)"/g)];
+    if (totalMatches.length === 0) return null;
+    
+    const checkedMatches = [...note.description.matchAll(/data-list="checked"/g)];
+    return {
+      total: totalMatches.length,
+      completed: checkedMatches.length
+    };
+  };
+
   const handleDoubleClick = (e) => {
     if (!isEditing && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !e.target.closest('.note-actions')) {
       setIsEditing(true);
@@ -440,12 +452,11 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
 
         {note.tags && note.tags.length > 0 && (
           <div className="note-tags">
-            {note.tags.map(tag => (
+            {note.tags.map((tag, idx) => (
               <span 
-                key={tag} 
-                className="tag-chip readonly" 
+                key={idx} 
+                className="tag-chip clickable"
                 onClick={() => onTagClick && onTagClick(tag)}
-                style={{ cursor: 'pointer' }}
                 title={`Filter by #${tag}`}
               >
                 #{tag}
@@ -453,6 +464,18 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
             ))}
           </div>
         )}
+
+        {(() => {
+          const checklist = getChecklistProgress();
+          return checklist ? (
+            <div className="checklist-progress" style={{ marginTop: '15px', fontSize: '0.85rem', color: '#666', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}>Tasks: {checklist.completed}/{checklist.total}</span>
+              <div style={{ flex: 1, height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ width: `${(checklist.completed / checklist.total) * 100}%`, height: '100%', background: '#4caf50', transition: 'width 0.3s' }}></div>
+              </div>
+            </div>
+          ) : null;
+        })()}
         
         <div className="note-footer-info" style={{ marginTop: '10px', fontSize: '0.75rem', opacity: 0.7, display: 'flex', justifyContent: 'space-between' }}>
           <em>Last edited: {timeAgo(note.updatedAt)}</em>
