@@ -365,6 +365,13 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     };
   };
 
+  const getReadingTime = () => {
+    if (!note.description) return 0;
+    const text = note.description.replace(/<[^>]*>?/gm, '');
+    const words = text.split(/\s+/).filter(word => word.length > 0).length;
+    return Math.ceil(words / 200);
+  };
+
   const getTagStyle = (tag) => {
     let hash = 0;
     for (let i = 0; i < tag.length; i++) {
@@ -493,11 +500,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         
         <div className="note-footer-info" style={{ marginTop: '10px', fontSize: '0.75rem', opacity: 0.7, display: 'flex', justifyContent: 'space-between' }}>
           <em>Last edited: {timeAgo(note.updatedAt)}</em>
-          <span>📖 {(() => {
-            const text = (note.description || '').replace(/(<([^>]+)>)/gi, "").trim();
-            const words = text ? text.split(/\s+/).length : 0;
-            return `${Math.ceil(words / 200) || 1} min read`;
-          })()}</span>
+          {getReadingTime() > 0 && <span>⏱️ {getReadingTime()} min read</span>}
         </div>
       </div>
       <div className="note-actions">
