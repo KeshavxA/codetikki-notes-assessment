@@ -160,6 +160,20 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     printWindow.document.close();
   };
 
+  const handleDownloadAll = (e) => {
+    e.stopPropagation();
+    note.attachments.forEach((att, index) => {
+      setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = att.dataUrl;
+        link.download = att.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }, index * 300);
+    });
+  };
+
   const handleCopyLink = () => {
     const url = `${window.location.origin}${window.location.pathname}#note-${note.id}`;
     navigator.clipboard.writeText(url).then(() => {
@@ -440,7 +454,17 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
         
         {note.attachments && note.attachments.length > 0 && (
           <div className="note-attachments-view">
-            <strong>Attachments: </strong>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <strong>Attachments: </strong>
+              {note.attachments.length > 1 && (
+                <button 
+                  onClick={handleDownloadAll}
+                  className="download-all-btn"
+                >
+                  📥 Download All
+                </button>
+              )}
+            </div>
             <div className="attachment-previews">
               {note.attachments.map(att => (
                 <div key={att.id} className="attachment-preview view-only">
