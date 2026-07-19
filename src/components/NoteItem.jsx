@@ -365,6 +365,19 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
     };
   };
 
+  const getTagStyle = (tag) => {
+    let hash = 0;
+    for (let i = 0; i < tag.length; i++) {
+      hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return {
+      backgroundColor: `hsl(${h}, 70%, 85%)`,
+      color: `hsl(${h}, 80%, 25%)`,
+      borderColor: `hsl(${h}, 70%, 75%)`
+    };
+  };
+
   const handleDoubleClick = (e) => {
     if (!isEditing && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !e.target.closest('.note-actions')) {
       setIsEditing(true);
@@ -456,6 +469,7 @@ const NoteItem = ({ note, currentView, onChangeStatus, onDeleteForever, onUpdate
               <span 
                 key={idx} 
                 className="tag-chip clickable"
+                style={getTagStyle(tag)}
                 onClick={() => onTagClick && onTagClick(tag)}
                 title={`Filter by #${tag}`}
               >
