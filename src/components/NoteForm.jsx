@@ -135,6 +135,15 @@ const NoteForm = ({ onAddNote }) => {
     }
   };
 
+  const getEditorStats = () => {
+    const plainText = description.replace(/<[^>]*>?/gm, '');
+    const charCount = plainText.length;
+    const wordCount = plainText.trim().split(/\s+/).filter(w => w.length > 0).length;
+    return { charCount, wordCount };
+  };
+
+  const { charCount, wordCount } = getEditorStats();
+
   return (
     <form className="note-form" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
       <div className="input-group">
@@ -156,18 +165,18 @@ const NoteForm = ({ onAddNote }) => {
         {error && <p className="error-text">{error}</p>}
       </div>
       
-      <ReactQuill 
-        theme="snow"
-        value={description}
-        onChange={setDescription}
-        modules={quillModules}
-        placeholder="Description (optional)"
-        className="rich-text-editor"
-      />
-      <div className="text-counts">
-        <small>
-          {description.replace(/(<([^>]+)>)/gi, "").trim() ? description.replace(/(<([^>]+)>)/gi, "").trim().split(/\s+/).length : 0} words | {description.replace(/(<([^>]+)>)/gi, "").length} characters
-        </small>
+      <div className="quill-wrapper" style={{ marginBottom: '10px' }}>
+        <ReactQuill 
+          theme="snow"
+          value={description}
+          onChange={setDescription}
+          modules={quillModules}
+          placeholder="Description (optional)"
+          className="rich-text-editor"
+        />
+        <div className="editor-stats" style={{ textAlign: 'right', fontSize: '0.8rem', color: '#888', marginTop: '5px' }}>
+          {wordCount} word{wordCount !== 1 ? 's' : ''} | {charCount} character{charCount !== 1 ? 's' : ''}
+        </div>
       </div>
 
       <div className="form-row">
