@@ -1370,3 +1370,29 @@ body.dark-mode .download-all-btn:hover {
   background: #444;
   color: #fff;
 }
+
+/* Template Buttons */
+.template-btn {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.template-btn:hover {
+  background: #e0e0e0;
+}
+
+body.dark-mode .template-btn {
+  background: #444;
+  border-color: #555;
+  color: #ddd;
+}
+
+body.dark-mode .template-btn:hover {
+  background: #555;
+}

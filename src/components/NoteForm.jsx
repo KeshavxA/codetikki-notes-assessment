@@ -144,6 +144,18 @@ const NoteForm = ({ onAddNote }) => {
 
   const { charCount, wordCount } = getEditorStats();
 
+  const applyTemplate = (type) => {
+    const templates = {
+      meeting: `<h2>Meeting Notes</h2><p><strong>Date:</strong> </p><p><strong>Attendees:</strong> </p><h3>Agenda</h3><ul><li></li></ul><h3>Action Items</h3><ul><li data-list="check"></li></ul>`,
+      todo: `<h2>To-Do List</h2><ul><li data-list="check">Task 1</li><li data-list="check">Task 2</li><li data-list="check">Task 3</li></ul>`,
+      journal: `<h2>Journal Entry</h2><p><strong>Mood:</strong> </p><p><strong>Today I'm grateful for:</strong></p><ul><li></li></ul><h3>Notes:</h3><p></p>`
+    };
+    setDescription(templates[type]);
+    if (type === 'meeting') setCategory('Work');
+    if (type === 'todo') setCategory('Ideas');
+    if (type === 'journal') setCategory('Personal');
+  };
+
   return (
     <form className="note-form" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
       <div className="input-group">
@@ -165,6 +177,13 @@ const NoteForm = ({ onAddNote }) => {
         {error && <p className="error-text">{error}</p>}
       </div>
       
+      <div className="template-buttons" style={{ marginBottom: '15px', display: 'flex', gap: '10px' }}>
+        <span style={{ fontSize: '0.85rem', color: '#666', alignSelf: 'center' }}>Templates:</span>
+        <button type="button" onClick={() => applyTemplate('meeting')} className="template-btn">🤝 Meeting</button>
+        <button type="button" onClick={() => applyTemplate('todo')} className="template-btn">✅ To-Do</button>
+        <button type="button" onClick={() => applyTemplate('journal')} className="template-btn">📔 Journal</button>
+      </div>
+
       <div className="quill-wrapper" style={{ marginBottom: '10px' }}>
         <ReactQuill 
           theme="snow"
