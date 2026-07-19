@@ -1,3 +1,4 @@
+import React from 'react';
 import NoteItem from './NoteItem';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
@@ -20,8 +21,15 @@ const NoteList = ({ notes, currentView, onChangeStatus, onDeleteForever, onUpdat
             {...provided.droppableProps} 
             ref={provided.innerRef}
           >
-            {notes.map((note, index) => (
-              <Draggable key={note.id.toString()} draggableId={note.id.toString()} index={index}>
+            {notes.map((note, index) => {
+              const isFirstPinned = currentView === 'active' && note.isPinned && index === 0;
+              const isFirstUnpinned = currentView === 'active' && !note.isPinned && (index === 0 || notes[index - 1].isPinned);
+              
+              return (
+                <React.Fragment key={note.id.toString() + '-frag'}>
+                  {isFirstPinned && <div className="list-section-header">📌 Pinned</div>}
+                  {isFirstUnpinned && (index !== 0 || notes.some(n => n.isPinned)) && <div className="list-section-header" style={{ marginTop: index === 0 ? '0' : '20px' }}>📝 Others</div>}
+                  <Draggable key={note.id.toString()} draggableId={note.id.toString()} index={index}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
@@ -48,7 +56,9 @@ const NoteList = ({ notes, currentView, onChangeStatus, onDeleteForever, onUpdat
                   </div>
                 )}
               </Draggable>
-            ))}
+                </React.Fragment>
+              );
+            })}
             {provided.placeholder}
           </div>
         )}
